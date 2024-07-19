@@ -1,0 +1,15 @@
+#submitForm {
+    margin-top: 30px;
+}
+
+.error {
+    font-style: italic;
+}
+
+input[type="text"] {
+    background-color: #f9f9f9;
+}
+
+textarea {
+    background-color: #f9f9f9;
+}

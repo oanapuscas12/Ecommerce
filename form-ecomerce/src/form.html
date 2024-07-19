@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Page</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/form.css">
+</head>
+
+<body>
+    <h1>Form Page</h1>
+
+    <form id="retrieveForm">
+        <label for="cuiRetrieve">CUI:</label>
+        <input type="text" id="cuiRetrieve" name="cuiRetrieve" required><br>
+        <span id="cuiRetrieveError" class="error"></span>
+        <span id="NoCUIFound" class="error"></span><br>
+        <button type="submit" id="retrieveButton">Retrieve Data</button>
+    </form>
+
+    <div id="resultContainer" style="display: none;"></div>
+
+    <form id="submitForm" style="display: none;">
+        <h2>Company Information</h2>
+        <div id="companyInfo"></div>
+
+        <h2>User Information</h2>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required onblur="checkField('email')"
+            oninput="checkField('email')"><br>
+        <span id="emailError" class="error"></span><br>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required onblur="checkField('name')" oninput="checkField('name')"><br>
+        <span id="nameError" class="error"></span><br>
+
+        <label for="user_name">Username:</label>
+        <input type="text" id="user_name" name="user_name" required onblur="checkField('user_name')"
+            oninput="checkField('user_name')"><br>
+        <span id="user_nameError" class="error"></span><br>
+
+        <button type="submit" id="submitButton" disabled>Submit Data</button>
+    </form>
+
+    <script type="module">
+        async function handleRetrieve(event) {
+            event.preventDefault();
+            const cuiInput = document.getElementById('cuiRetrieve');
+            const cuiValue = cuiInput.value.trim();
+
+            try {
+                const response = await fetch('/merchant_data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ cui: cuiValue })
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    throw new Error(`API request failed with status ${response.status}: ${errorMessage}`);
+                }
+
+                const data = await response.json();
+                displayResult(data);
+            } catch (error) {
+                console.error('Error making API request:', error);
+                const cuiError = document.getElementById('cuiRetrieveError');
+                cuiError.textContent = 'Error retrieving data. Please check the CUI and try again.';
+
+                showManualForm();
+            }
+        }
+
+        function showManualForm() {
+            const companyInfoContainer = document.getElementById('companyInfo');
+            companyInfoContainer.innerHTML = '';
+
+            const fields = [
+                { label: 'CUI', id: 'cui' },
+                { label: 'Denumire', id: 'denumire' },
+                { label: 'Adresa', id: 'adresa' },
+                { label: 'Nr Reg Com', id: 'nr_reg_com' },
+                { label: 'Telefon', id: 'telefon' },
+                { label: 'Cod Postal', id: 'cod_postal' }
+            ];
+
+            fields.forEach(field => {
+                const labelElement = document.createElement('label');
+                labelElement.setAttribute('for', field.id);
+                labelElement.textContent = field.label;
+
+                const inputElement = document.createElement('input');
+                inputElement.setAttribute('type', 'text');
+                inputElement.setAttribute('id', field.id);
+                inputElement.setAttribute('name', field.id);
+                inputElement.classList.add('editable');
+
+                inputElement.addEventListener('input', () => {
+                    const errorElement = document.getElementById(`${field.id}Error`);
+                    if (inputElement.value.trim() === '') {
+                        errorElement.textContent = `Please enter ${field.label.toLowerCase()}.`;
+                    } else {
+                        errorElement.textContent = '';
+                    }
+                    checkAllFields();
+                });
+
+                companyInfoContainer.appendChild(labelElement);
+                companyInfoContainer.appendChild(inputElement);
+                companyInfoContainer.appendChild(document.createElement('br'));
+
+                const errorElement = document.createElement('span');
+                errorElement.setAttribute('id', `${field.id}Error`);
+                errorElement.classList.add('error');
+                companyInfoContainer.appendChild(errorElement);
+                companyInfoContainer.appendChild(document.createElement('br'));
+            });
+
+            checkAllFields();
+
+            document.getElementById('submitForm').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+
+        async function displayResult(data) {
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = '';
+
+            if (data.cod === 200 && data.message === 'SUCCESS') {
+                if (data.found.length === 0) {
+                    const cuiError = document.getElementById('cuiRetrieveError');
+                    cuiError.textContent = 'No results found.';
+                    return;
+                }
+
+                const companyInfoContainer = document.getElementById('companyInfo');
+                companyInfoContainer.innerHTML = '';
+
+                const item = data.found[0].date_generale;
+                const fields = [
+                    { label: 'CUI', id: 'cui', value: item.cui },
+                    { label: 'Denumire', id: 'denumire', value: item.denumire },
+                    { label: 'Adresa', id: 'adresa', value: item.adresa },
+                    { label: 'Nr Reg Com', id: 'nr_reg_com', value: item.nrRegCom },
+                    { label: 'Telefon', id: 'telefon', value: item.telefon },
+                    { label: 'Cod Postal', id: 'cod_postal', value: item.codPostal }
+                ];
+
+                fields.forEach(field => {
+                    const labelElement = document.createElement('label');
+                    labelElement.setAttribute('for', field.id);
+                    labelElement.textContent = field.label;
+
+                    const inputElement = document.createElement('input');
+                    inputElement.setAttribute('type', 'text');
+                    inputElement.setAttribute('id', field.id);
+                    inputElement.setAttribute('name', field.id);
+
+                    const trimmedValue = (typeof field.value === 'string') ? field.value.replace(/^\s+/, '') : field.value;
+                    inputElement.setAttribute('value', trimmedValue ?? '');
+
+                    if (trimmedValue === '') {
+                        inputElement.removeAttribute('readonly');
+                        inputElement.classList.add('editable');
+                        inputElement.addEventListener('input', () => {
+                            const errorElement = document.getElementById(`${field.id}Error`);
+                            if (inputElement.value.trim() === '') {
+                                errorElement.textContent = `Please enter ${field.label.toLowerCase()}.`;
+                            } else {
+                                errorElement.textContent = '';
+                            }
+                            checkAllFields();
+                        });
+                    } else {
+                        inputElement.readOnly = true;
+                    }
+
+                    companyInfoContainer.appendChild(labelElement);
+                    companyInfoContainer.appendChild(inputElement);
+                    companyInfoContainer.appendChild(document.createElement('br'));
+
+                    const errorElement = document.createElement('span');
+                    errorElement.setAttribute('id', `${field.id}Error`);
+                    errorElement.classList.add('error');
+                    if (trimmedValue === '') {
+                        errorElement.textContent = `Please enter ${field.label.toLowerCase()}.`;
+                    }
+                    companyInfoContainer.appendChild(errorElement);
+                    companyInfoContainer.appendChild(document.createElement('br'));
+                });
+
+                checkAllFields();
+
+                document.getElementById('submitForm').style.display = 'block';
+                resultContainer.style.display = 'block';
+            } else {
+                const cuiError = document.getElementById('cuiRetrieveError');
+                cuiError.textContent = 'No results found.';
+            }
+        }
+
+        async function checkExistingData(field, value, errorElementId) {
+            try {
+                const response = await fetch('/check_field', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ field, value })
+                });
+
+                const result = await response.json();
+                const errorElement = document.getElementById(errorElementId);
+                if (result.exists) {
+                    errorElement.textContent = `${field.replace(/_/g, ' ').toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} already exists.`;
+                } else {
+                    errorElement.textContent = '';
+                }
+                checkSubmitButton();
+            } catch (error) {
+                console.error(`Error checking ${field}:`, error);
+            }
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const userName = document.getElementById('user_name').value.trim();
+            const cui = document.getElementById('cui').value.trim();
+            const denumire = document.getElementById('denumire').value.trim();
+            const adresa = document.getElementById('adresa').value.trim();
+            const nr_reg_com = document.getElementById('nr_reg_com').value.trim();
+            const telefon = document.getElementById('telefon').value.trim();
+            const cod_postal = document.getElementById('cod_postal').value.trim();
+
+            if (email === '' || name === '' || userName === '' || cui === '' || denumire === '' || adresa === '' || nr_reg_com === '' || telefon === '' || cod_postal === '') {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const submitData = {
+                cui: cui,
+                denumire: denumire,
+                adresa: adresa,
+                nr_reg_com: nr_reg_com,
+                telefon: telefon,
+                cod_postal: cod_postal,
+                email: email,
+                name: name,
+                user_name: userName
+            };
+
+            try {
+                const response = await fetch('/submit_data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(submitData)
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    throw new Error(`API request failed with status ${response.status}: ${errorMessage}`);
+                }
+
+                const result = await response.text();
+                if (result.includes('success')) {
+                    window.location.href = '/success.html';
+                } else {
+                    window.location.href = '/failure.html';
+                }
+            } catch (error) {
+                console.error('Error submitting data:', error);
+                alert('Error submitting data');
+            }
+        }
+
+        async function checkField(field) {
+            const value = document.getElementById(field).value.trim();
+            if (value) {
+                await checkExistingData(field, value, `${field}Error`);
+            } else {
+                const errorElement = document.getElementById(`${field}Error`);
+                errorElement.textContent = `Please enter ${field.replace(/_/g, ' ').toLowerCase()}.`;
+            }
+        }
+
+        function checkAllFields() {
+            const fieldsToCheck = ['cui', 'denumire', 'adresa', 'nr_reg_com', 'telefon', 'cod_postal', 'email', 'name', 'user_name'];
+            fieldsToCheck.forEach(field => {
+                checkField(field);
+            });
+        }
+
+        function checkSubmitButton() {
+            const errorElements = document.querySelectorAll('#submitForm .error');
+            let hasError = false;
+
+            errorElements.forEach(errorElement => {
+                if (errorElement.textContent.trim() !== '') {
+                    hasError = true;
+                }
+            });
+
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = hasError;
+        }
+
+        const manualFormFields = ['email', 'name', 'user_name', 'cui', 'denumire', 'adresa', 'nr_reg_com', 'telefon', 'cod_postal'];
+        manualFormFields.forEach(field => {
+            const fieldElement = document.getElementById(field);
+            if (fieldElement) {
+                fieldElement.addEventListener('blur', () => checkField(field));
+                fieldElement.addEventListener('input', () => checkField(field));
+            }
+        });
+
+        checkSubmitButton();
+
+
+        document.getElementById('retrieveForm').addEventListener('submit', handleRetrieve);
+        document.getElementById('submitForm').addEventListener('submit', handleSubmit);
+
+        document.getElementById('cuiRetrieve').addEventListener('input', () => {
+            const cuiInput = document.getElementById('cuiRetrieve');
+            let cuiValue = cuiInput.value.trim();
+
+            const regex = /[^0-9]/g;
+
+            cuiValue = cuiValue.replace(regex, '');
+
+            cuiInput.value = cuiValue;
+
+            const errorElement = document.getElementById('cuiRetrieveError');
+
+            if (cuiValue.length === 0) {
+                errorElement.textContent = 'CUI cannot be empty.';
+            } else if (cuiValue.length !== cuiInput.value.length) {
+                errorElement.textContent = 'Please enter numbers only.';
+            } else {
+                errorElement.textContent = '';
+            }
+
+            const submitForm = document.getElementById('submitForm');
+            if (submitForm.style.display === 'block') {
+                submitForm.style.display = 'none';
+                document.getElementById('resultContainer').style.display = 'none';
+            }
+        });
+
+        const fieldsToCheck = ['cui', 'denumire', 'adresa', 'nr_reg_com', 'telefon', 'cod_postal'];
+        fieldsToCheck.forEach(field => {
+            const fieldElement = document.getElementById(field);
+            if (fieldElement) {
+                fieldElement.addEventListener('blur', () => checkField(field));
+                fieldElement.addEventListener('input', () => checkField(field));
+            }
+        });
+
+        const userFieldsToCheck = ['email', 'name', 'user_name'];
+        userFieldsToCheck.forEach(field => {
+            const fieldElement = document.getElementById(field);
+            if (fieldElement) {
+                fieldElement.addEventListener('blur', () => checkField(field));
+                fieldElement.addEventListener('input', () => checkField(field));
+            }
+        });
+    </script>
+</body>
+
+</html>
