@@ -10,11 +10,11 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'ecommerce',
-    password: 'postgres',
-    port: 5432,
+    user: 'DB_USER ',
+    host: 'DB_HOST',
+    database: 'DB_DATABASE',
+    password: 'DB_PASSWORD',
+    port: 'DB_PORT',
 });
 
 app.use(express.static('src'));
