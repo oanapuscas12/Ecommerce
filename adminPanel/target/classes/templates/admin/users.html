@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link rel="stylesheet" href="/templates/static/css/styles.css">
+</head>
+<body>
+<h1>User List</h1>
+<a href="/admin/users/create">Create New User</a>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Is Admin</th>
+        <th>Active</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.isAdmin}"></td>
+        <td th:text="${user.active}"></td>
+        <td>
+            <a th:href="@{/admin/users/{id}(id=${user.id})}">View</a>
+            <form th:action="@{/admin/users/deactivate/{id}(id=${user.id})}" method="post" style="display:inline;">
+                <button type="submit">Deactivate</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

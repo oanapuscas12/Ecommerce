@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <link rel="stylesheet" href="/templates/static/css/styles.css">
+</head>
+<body>
+<h1>User Details</h1>
+<a th:if="${user.isAdmin}" href="/user/admins">Back to Admin List</a>
+<a th:unless="${user.isAdmin}" href="/user/merchants">Back to Merchants List</a>
+
+<div>
+    <p>ID: <span th:text="${user.id}"></span></p>
+    <p>Username: <span th:text="${user.username}"></span></p>
+    <p>Email: <span th:text="${user.email}"></span></p>
+    <p>Active: <span th:text="${user.active} ? 'Yes' : 'No'"></span></p>
+    <p>Is Admin: <span th:text="${user.isAdmin} ? 'Yes' : 'No'"></span></p>
+    <p>Last Login Date: <span th:text="${user.lastLoginDate}"></span></p>
+</div>
+</body>
+</html>

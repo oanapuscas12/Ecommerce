@@ -1,0 +1,37 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8000
+  tomcat:
+    remote_ip_header: x-forwarded-for
+    protocol_header: x-forwarded-proto
+logging:
+  file: ecommerce.log
+
+#mailgun:
+#  api:
+#    url:
+#    credentials:
+#  admin:
+#    mail:
+#mail:
+#  service:
+#    sendEmail: false
+
+#domain: https://
+domain: http://localhost:8000
+user:
+  activation:
+    token-availability-hours: 24

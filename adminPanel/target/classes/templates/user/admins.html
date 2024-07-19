@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admins</title>
+    <link rel="stylesheet" href="/templates/static/css/styles.css">
+</head>
+<body>
+<h1>Admins List</h1>
+<a href="/user/users/create">Create New Admin</a>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>AdminName</th>
+        <th>Email</th>
+        <th>Active</th>
+        <th>Is Admin</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="admin : ${admins}">
+        <td th:text="${admin.id}"></td>
+        <td th:text="${admin.username}"></td>
+        <td th:text="${admin.email}"></td>
+        <td th:text="${admin.active} ? 'Yes' : 'No'"></td>
+        <td th:text="${admin.isAdmin} ? 'Yes' : 'No'"></td>
+        <td>
+            <a th:href="@{/user/admins/{id}(id=${admin.id})}">View</a>
+
+            <form th:if="${admin.active}" th:action="@{/user/admins/deactivate/{id}(id=${admin.id})}" method="post" style="display:inline;">
+                <button type="submit">Deactivate</button>
+            </form>
+
+            <form th:if="${!admin.active}" th:action="@{/user/admins/activate/{id}(id=${admin.id})}" method="post" style="display:inline;">
+                <button type="submit">Activate</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<a href="/user/merchants" class="button">View Merchants</a>
+</body>
+</html>

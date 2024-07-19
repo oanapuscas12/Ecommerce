@@ -1,0 +1,16 @@
+com\ecommerce\model\BaseEntity.class
+com\ecommerce\model\VerificationToken.class
+com\ecommerce\Application.class
+com\ecommerce\controller\LoginController.class
+com\ecommerce\service\UserService.class
+com\ecommerce\model\PaymentDetails.class
+com\ecommerce\config\SecurityConfig.class
+com\ecommerce\controller\UserController.class
+com\ecommerce\security\AuditorAwareImpl.class
+com\ecommerce\controller\RegistrationController.class
+com\ecommerce\model\VerificationToken$TokenStatus.class
+com\ecommerce\repository\UserRepository.class
+com\ecommerce\repository\VerificationTokenRepository.class
+com\ecommerce\security\DatabaseAuthenticationProvider.class
+com\ecommerce\model\User.class
+com\ecommerce\service\VerificationTokenService.class
