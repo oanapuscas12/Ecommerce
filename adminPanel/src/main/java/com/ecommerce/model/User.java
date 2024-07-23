@@ -40,6 +40,18 @@ public class User extends BaseEntity {
     @Column(name = "last_login_date")
     private LocalDateTime lastLoginDate;
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (isAdmin) {
             return Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));

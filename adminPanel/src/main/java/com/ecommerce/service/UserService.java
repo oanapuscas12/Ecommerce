@@ -70,4 +70,19 @@ public class UserService {
     public List<User> getAllAdmins() {
         return userRepository.findByIsAdmin(true);
     }
+
+    public void updateUser(Long id, User updatedUser) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+            if (!updatedUser.getPassword().isEmpty()) {
+                existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+            existingUser.setAdmin(updatedUser.isAdmin());
+            existingUser.setActive(updatedUser.isActive());
+            userRepository.save(existingUser);
+        }
+    }
 }
