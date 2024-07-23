@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 <h1>Login</h1>
+
+<!-- Afișarea mesajelor de eroare -->
+<div th:if="${errorMsg}" class="alert alert-danger">
+    <p th:text="${errorMsg}"></p>
+</div>
+<div th:if="${logoutMsg}" class="alert alert-success">
+    <p th:text="${logoutMsg}"></p>
+</div>
+
 <form action="/login" method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -18,8 +27,9 @@
     <button type="submit">Login</button>
 </form>
 <br>
+<!-- Link to Registration Page -->
 <a href="/register">
-    <button type="button">Sign up</button>
+    <button type="button">Register</button>
 </a>
 </body>
 </html>

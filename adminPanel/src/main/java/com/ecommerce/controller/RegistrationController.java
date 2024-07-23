@@ -25,9 +25,9 @@ public class RegistrationController {
     public String registerUser(@ModelAttribute User user, Model model) {
         try {
             userService.createUser(user);
-            return "redirect:/login";
+            return "redirect:/login?registered=true";
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMsg", e.getMessage());
             return "register";
         }
     }
