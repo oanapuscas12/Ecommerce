@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
     <script th:src="@{/js/register.js}"></script>
 </head>
 <body>
 <h1>Register</h1>
+
+<div th:if="${errorMsg}" class="alert alert-danger">
+    <p th:text="${errorMsg}"></p>
+</div>
+
 <form action="/register" method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required><br>
@@ -20,11 +26,13 @@
 
     <label for="confirmPassword">Confirm Password:</label>
     <input type="password" id="confirmPassword" name="confirmPassword" required><br>
-    <p id="passwordError" style="color: red;"></p>
+    <p id="passwordError"></p>
 
     <button type="submit">Register</button>
 </form>
 <p th:if="${error}" th:text="${error}"></p>
 
+
+<p>Already have an account? <a href="/login">Login here</a></p>
 </body>
 </html>

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" th:href="@{/static/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <script th:src="@{/js/register.js}"></script>
 </head>
 <body>
 <h1>Register</h1>
@@ -24,14 +26,13 @@
 
     <label for="confirmPassword">Confirm Password:</label>
     <input type="password" id="confirmPassword" name="confirmPassword" required><br>
-    <p id="passwordError" style="color: red;"></p>
+    <p id="passwordError"></p>
 
     <button type="submit">Register</button>
 </form>
 <p th:if="${error}" th:text="${error}"></p>
 
 
-<!-- Link to Login Page -->
 <p>Already have an account? <a href="/login">Login here</a></p>
 </body>
 </html>

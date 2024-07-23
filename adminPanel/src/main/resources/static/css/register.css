@@ -1,11 +1,4 @@
-.error {
+#passwordError {
     color: red;
     margin-left: 10px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: auto;
 }
