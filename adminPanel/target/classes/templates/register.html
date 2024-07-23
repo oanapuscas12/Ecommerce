@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/register.js}"></script>
 </head>
 <body>
 <h1>Register</h1>
@@ -16,8 +18,13 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required><br>
 
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required><br>
+    <p id="passwordError" style="color: red;"></p>
+
     <button type="submit">Register</button>
 </form>
 <p th:if="${error}" th:text="${error}"></p>
+
 </body>
 </html>

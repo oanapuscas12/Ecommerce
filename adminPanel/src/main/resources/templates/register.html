@@ -22,8 +22,14 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required><br>
 
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required><br>
+    <p id="passwordError" style="color: red;"></p>
+
     <button type="submit">Register</button>
 </form>
+<p th:if="${error}" th:text="${error}"></p>
+
 
 <!-- Link to Login Page -->
 <p>Already have an account? <a href="/login">Login here</a></p>
