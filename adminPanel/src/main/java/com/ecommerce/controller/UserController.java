@@ -52,7 +52,7 @@ public class UserController {
     @GetMapping("/users/create")
     public String createUserForm(@RequestParam String role, Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("role", role); // Make sure to add the role to the model
+        model.addAttribute("role", role);
         return "user/create-user";
     }
 
@@ -93,4 +93,3 @@ public class UserController {
         return "redirect:/user/users?role=" + role;
     }
 }
-
