@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +29,11 @@ public class UserController {
         } else if ("merchant".equalsIgnoreCase(pageRole)) {
             users = userService.getAllMerchants();
         } else {
-            return "redirect:/user/users?role=admin";
+            return "redirect:/users?role=admin";
         }
+
+        // Sort the users by username
+        users.sort(Comparator.comparing(User::getUsername));
 
         model.addAttribute("role", pageRole);
         model.addAttribute("otherRole", otherRole);

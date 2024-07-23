@@ -20,7 +20,6 @@
         <table>
             <thead>
             <tr>
-                <th>ID</th>
                 <th th:text="${role + ' Name'}">User Name</th>
                 <th>Email</th>
                 <th>Active</th>
@@ -30,7 +29,6 @@
             </thead>
             <tbody>
             <tr th:each="user : ${users}">
-                <td th:text="${user.id}"></td>
                 <td th:text="${user.username}"></td>
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.active} ? 'Yes' : 'No'"></td>
@@ -38,10 +36,12 @@
                 <td>
                     <a th:href="@{/user/users/{id}(id=${user.id})}" aria-label="View User">View</a>
                     <a th:href="@{/user/users/edit/{id}(id=${user.id})}" aria-label="Edit User">Edit</a>
-                    <form th:if="${user.active}" th:action="@{/user/users/deactivate/{id}(id=${user.id}, role=${role})}" method="post" style="display:inline;">
+                    <form th:if="${user.active}" th:action="@{/user/users/deactivate/{id}(id=${user.id})}" method="post" style="display:inline;">
+                        <input type="hidden" name="role" th:value="${role}">
                         <button type="submit" aria-label="Deactivate User">Deactivate</button>
                     </form>
-                    <form th:if="${!user.active}" th:action="@{/user/users/activate/{id}(id=${user.id}, role=${role})}" method="post" style="display:inline;">
+                    <form th:if="${!user.active}" th:action="@{/user/users/activate/{id}(id=${user.id})}" method="post" style="display:inline;">
+                        <input type="hidden" name="role" th:value="${role}">
                         <button type="submit" aria-label="Activate User">Activate</button>
                     </form>
                 </td>
