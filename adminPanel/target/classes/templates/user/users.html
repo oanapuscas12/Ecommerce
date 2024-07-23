@@ -38,10 +38,10 @@
                 <td>
                     <a th:href="@{/user/users/{id}(id=${user.id})}" aria-label="View User">View</a>
                     <a th:href="@{/user/users/edit/{id}(id=${user.id})}" aria-label="Edit User">Edit</a>
-                    <form th:if="${user.active}" th:action="@{/user/users/deactivate/{id}(id=${user.id})}" method="post" style="display:inline;">
+                    <form th:if="${user.active}" th:action="@{/user/users/deactivate/{id}(id=${user.id}, role=${role})}" method="post" style="display:inline;">
                         <button type="submit" aria-label="Deactivate User">Deactivate</button>
                     </form>
-                    <form th:if="${!user.active}" th:action="@{/user/users/activate/{id}(id=${user.id})}" method="post" style="display:inline;">
+                    <form th:if="${!user.active}" th:action="@{/user/users/activate/{id}(id=${user.id}, role=${role})}" method="post" style="display:inline;">
                         <button type="submit" aria-label="Activate User">Activate</button>
                     </form>
                 </td>
