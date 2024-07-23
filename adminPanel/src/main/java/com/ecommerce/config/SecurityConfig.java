@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/user/admins", true) // Redirect to /admin/users after login
+                .defaultSuccessUrl("/user/users", true) // Redirect to /admin/users after login
                 .permitAll()
                 .and()
                 .logout()

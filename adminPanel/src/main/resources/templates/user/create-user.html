@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create User</title>
-    <link rel="stylesheet" href="/templates/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 <h1>Create User</h1>
-<form action="/user/users" method="post">
+<form th:action="@{/user/users}" method="post">
+    <input type="hidden" name="role" th:value="${role}">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
     <br>
@@ -18,8 +19,8 @@
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
     <br>
-    <label for="isAdmin">Is Admin:</label>
-    <input type="checkbox" id="isAdmin" name="isAdmin">
+    <label for="admin">Is Admin:</label>
+    <input type="checkbox" id="admin" name="admin">
     <br>
     <label for="active">Is Active:</label>
     <input type="checkbox" id="active" name="active" checked>
