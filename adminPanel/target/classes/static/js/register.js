@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-debugger;
-console.log("Test")
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirmPassword');
     const errorElement = document.getElementById('passwordError');

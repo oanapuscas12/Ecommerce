@@ -40,6 +40,9 @@ public class User extends BaseEntity {
     @Column(name = "last_login_date")
     private LocalDateTime lastLoginDate;
 
+    @Column(name = "token")
+    private String token;
+
     public boolean isAdmin() {
         return isAdmin;
     }

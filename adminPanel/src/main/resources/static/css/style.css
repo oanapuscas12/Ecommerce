@@ -6,7 +6,7 @@ body {
     align-items: center;
     height: auto;
     flex-direction: column;
-    width: 100%;
+    width: auto;
 }
 
 .container {

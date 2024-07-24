@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <title th:text="${pageTitle}">Page Title</title>
+</head>
+<body>
+<header>
+    <nav>
+        <a th:href="@{/user/users/create}" class="button">Create new User</a>
+        <a th:href="@{/user/users(role=${otherRole})}" class="button" th:text="'View ' + ${otherRole} + 's'">View Other Role</a>
+        <a th:href="@{/logout}" class="button">Logout</a>
+        <a th:href="@{/user/users/{id}(id=${currentUser.id})}" th:text="${currentUser.username}">User Name</a>
+        <h1 th:text="${pageTitle}">Page Title</h1>
+    </nav>
+</header>
+
+<main>
+    <div th:fragment="content">
+    </div>
+</main>
+
+<footer>
+</footer>
+</body>
+</html>
