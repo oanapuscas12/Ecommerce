@@ -15,18 +15,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByEmailOrUsername(String email, String username);
-
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
-
-    boolean existsByEmailOrUsername(String email, String username);
-
-    @Transactional
-    @Modifying
-    @Query("UPDATE User u SET u.lastLoginDate = CURRENT_TIMESTAMP WHERE u.username = :username")
-    void setLastLoginForUsername(@Param("username") String username);
 
     @Transactional
     @Modifying
@@ -34,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void setLastLoginForId(@Param("id") Long id);
 
     List<User> findByIsAdmin(boolean isAdmin);
+
+    Optional<User> findByToken(String token);
 }

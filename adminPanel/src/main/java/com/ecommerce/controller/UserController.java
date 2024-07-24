@@ -20,6 +20,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String getUsers(@RequestParam(required = false) String role, Model model) {
+        User currentUser = userService.getCurrentUser();
         List<User> users;
         String pageRole = role != null ? role : "admin";
         String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
@@ -29,13 +30,13 @@ public class UserController {
         } else if ("merchant".equalsIgnoreCase(pageRole)) {
             users = userService.getAllMerchants();
         } else {
-            return "redirect:/users?role=admin";
+            return "redirect:/user/users?role=admin";
         }
 
-        // Sort the users by username
         users.sort(Comparator.comparing(User::getUsername));
 
         model.addAttribute("role", pageRole);
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", pageRole.substring(0, 1).toUpperCase() + pageRole.substring(1) + "s List");
         model.addAttribute("users", users);
@@ -48,15 +49,22 @@ public class UserController {
         Optional<User> user = userService.getUserById(id);
         if (user.isPresent()) {
             model.addAttribute("user", user.get());
+            model.addAttribute("currentUser", user.get());
+            model.addAttribute("role", role != null ? role : "admin");
+            model.addAttribute("otherRole", user.get().isAdmin()?"Admin":"Merchant");
+            model.addAttribute("pageTitle", "User Details: " + user.get().getUsername());
             return "user/user-details";
         }
         return "redirect:/user/users" + (role != null ? "?role=" + role : "");
     }
 
     @GetMapping("/users/create")
-    public String createUserForm(@RequestParam String role, Model model) {
+    public String createUserForm(Model model) {
+        User currentUser = userService.getCurrentUser();
         model.addAttribute("user", new User());
-        model.addAttribute("role", role);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("otherRole", "Admin");
+        model.addAttribute("pageTitle", "Create new User");
         return "user/create-user";
     }
 
@@ -70,8 +78,12 @@ public class UserController {
     public String editUserForm(@PathVariable Long id, @RequestParam(required = false) String role, Model model) {
         Optional<User> user = userService.getUserById(id);
         if (user.isPresent()) {
+            User currentUser = userService.getCurrentUser();
             model.addAttribute("user", user.get());
-            model.addAttribute("role", role != null ? role : "admin"); // Add role to the model
+            model.addAttribute("currentUser", currentUser);
+            model.addAttribute("role", role != null ? role : "admin");
+            model.addAttribute("otherRole", user.get().isAdmin()?"Admin":"Merchant");
+            model.addAttribute("pageTitle", "Edit User: " + user.get().getUsername());
             return "user/edit-user";
         }
         return "redirect:/user/users?role=" + (role != null ? role : "admin");
@@ -81,7 +93,6 @@ public class UserController {
     public String editUser(@PathVariable Long id, @ModelAttribute User user, @RequestParam String role) {
         userService.updateUser(id, user);
         String newRole = user.isAdmin() ? "admin" : "merchant";
-
         return "redirect:/user/users?role=" + newRole;
     }
 

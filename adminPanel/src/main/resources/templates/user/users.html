@@ -5,18 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pageTitle}">Users List</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
 </head>
 <body>
-<header>
-    <h1 th:text="${pageTitle}">Users List</h1>
-    <nav>
-        <a th:href="@{/user/users/create(role=${role})}" class="button" th:text="'Create ' + ${role}">Create User</a>
-        <a th:href="@{/user/users(role=${otherRole})}" class="button" th:text="'View ' + ${otherRole} + 's'">View Other Role</a>
-    </nav>
-</header>
-
+<header th:replace="layout/base :: header"></header>
 <main>
-    <section>
+    <section th:fragment="content">
         <table>
             <thead>
             <tr>
@@ -37,11 +31,9 @@
                     <a th:href="@{/user/users/{id}(id=${user.id})}" aria-label="View User">View</a>
                     <a th:href="@{/user/users/edit/{id}(id=${user.id})}" aria-label="Edit User">Edit</a>
                     <form th:if="${user.active}" th:action="@{/user/users/deactivate/{id}(id=${user.id})}" method="post" style="display:inline;">
-                        <input type="hidden" name="role" th:value="${role}">
                         <button type="submit" aria-label="Deactivate User">Deactivate</button>
                     </form>
                     <form th:if="${!user.active}" th:action="@{/user/users/activate/{id}(id=${user.id})}" method="post" style="display:inline;">
-                        <input type="hidden" name="role" th:value="${role}">
                         <button type="submit" aria-label="Activate User">Activate</button>
                     </form>
                 </td>
@@ -50,8 +42,6 @@
         </table>
     </section>
 </main>
-
-<footer>
-</footer>
+<footer></footer>
 </body>
 </html>

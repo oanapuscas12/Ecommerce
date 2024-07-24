@@ -3,40 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User</title>
+    <title th:text="${pageTitle}">Edit User</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
 </head>
 <body>
-<h1>Edit User</h1>
+<header th:replace="layout/base :: header"></header>
+<main>
+    <section th:fragment="content">
+        <a th:if="${user.isAdmin}" th:href="@{/user/users?role=admin}">Back to Admin List</a>
+        <a th:unless="${user.isAdmin}" th:href="@{/user/users?role=merchant}">Back to Merchants List</a>
 
-<a th:if="${user.isAdmin}" href="/user/users?role=admin">Back to Admin List</a>
-<a th:unless="${user.isAdmin}" href="/user/users?role=merchant">Back to Merchants List</a>
-
-<form th:action="@{/user/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
-    <input type="hidden" name="role" th:value="${role}">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" th:field="*{username}" required>
-    </div>
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}" required>
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" th:field="*{password}">
-    </div>
-    <div>
-        <label for="isAdmin">Is Admin:</label>
-        <input type="checkbox" id="isAdmin" th:field="*{admin}">
-    </div>
-    <div>
-        <label for="active">Active:</label>
-        <input type="checkbox" id="active" th:field="*{active}">
-    </div>
-    <button type="submit">Save Changes</button>
-</form>
-
-<a href="#" onclick="history.back()">Back</a>
+        <form th:action="@{/user/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" th:field="*{username}" required>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:field="*{email}" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" th:field="*{password}">
+            </div>
+            <div>
+                <label for="isAdmin">Is Admin:</label>
+                <input type="checkbox" id="isAdmin" th:field="*{admin}">
+            </div>
+            <div>
+                <label for="active">Active:</label>
+                <input type="checkbox" id="active" th:field="*{active}">
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+        <a href="#" onclick="history.back()">Back</a>
+    </section>
+</main>
+<footer></footer>
 </body>
 </html>
