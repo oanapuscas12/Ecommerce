@@ -47,11 +47,12 @@ public class UserController {
     @GetMapping("/users/{id}")
     public String getUserById(@PathVariable Long id, @RequestParam(required = false) String role, Model model) {
         Optional<User> user = userService.getUserById(id);
+        User currentUser = userService.getCurrentUser();
         if (user.isPresent()) {
             model.addAttribute("user", user.get());
-            model.addAttribute("currentUser", user.get());
+            model.addAttribute("currentUser", currentUser);
             model.addAttribute("role", role != null ? role : "admin");
-            model.addAttribute("otherRole", user.get().isAdmin()?"Admin":"Merchant");
+            model.addAttribute("otherRole", user.get().isAdmin() ? "Admin" : "Merchant");
             model.addAttribute("pageTitle", "User Details: " + user.get().getUsername());
             return "user/user-details";
         }
@@ -82,7 +83,7 @@ public class UserController {
             model.addAttribute("user", user.get());
             model.addAttribute("currentUser", currentUser);
             model.addAttribute("role", role != null ? role : "admin");
-            model.addAttribute("otherRole", user.get().isAdmin()?"Admin":"Merchant");
+            model.addAttribute("otherRole", user.get().isAdmin() ? "Admin" : "Merchant");
             model.addAttribute("pageTitle", "Edit User: " + user.get().getUsername());
             return "user/edit-user";
         }

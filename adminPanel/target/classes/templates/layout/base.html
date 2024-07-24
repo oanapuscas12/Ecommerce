@@ -12,8 +12,8 @@
     <nav>
         <a th:href="@{/user/users/create}" class="button">Create new User</a>
         <a th:href="@{/user/users(role=${otherRole})}" class="button" th:text="'View ' + ${otherRole} + 's'">View Other Role</a>
-        <a th:href="@{/logout}" class="button">Logout</a>
         <a th:href="@{/user/users/{id}(id=${currentUser.id})}" th:text="${currentUser.username}">User Name</a>
+        <a th:href="@{/logout}" class="button">Logout</a>
         <h1 th:text="${pageTitle}">Page Title</h1>
     </nav>
 </header>
