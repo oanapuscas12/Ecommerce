@@ -26,38 +26,4 @@ public class LoginController {
         }
         return "login";
     }
-
-    @GetMapping("/forgot-password")
-    public String showForgotPasswordForm(Model model) {
-        return "forgot-password";
-    }
-
-    @PostMapping("/forgot-password")
-    public String handleForgotPassword(@RequestParam("email") String email, Model model) {
-        boolean success = userService.initiatePasswordReset(email);
-        if (success) {
-            model.addAttribute("message", "A password reset link has been sent to your email.");
-        } else {
-            model.addAttribute("message", "No account found with that email.");
-        }
-        return "forgot-password";
-    }
-
-    @GetMapping("/reset-password")
-    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
-        model.addAttribute("token", token);
-        return "reset-password";
-    }
-
-    @PostMapping("/reset-password")
-    public String handleResetPassword(@RequestParam("token") String token, @RequestParam("password") String password, Model model) {
-        boolean success = userService.resetPassword(token, password);
-        if (success) {
-            model.addAttribute("message", "Password successfully reset.");
-            return "login";
-        } else {
-            model.addAttribute("message", "Invalid or expired token.");
-            return "reset-password";
-        }
-    }
 }

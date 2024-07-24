@@ -145,4 +145,13 @@ public class UserService {
             return null;
         }
     }
+
+    public void updatePassword(Long id, String newPassword) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            User existingUser = user.get();
+            existingUser.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(existingUser);
+        }
+    }
 }

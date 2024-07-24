@@ -12,14 +12,17 @@
 <main>
     <section th:fragment="content">
         <div>
-            <p>ID: <span th:text="${user.id}"></span></p>
             <p>Username: <span th:text="${user.username}"></span></p>
             <p>Email: <span th:text="${user.email}"></span></p>
             <p>Active: <span th:text="${user.active} ? 'Yes' : 'No'"></span></p>
             <p>Is Admin: <span th:text="${user.isAdmin} ? 'Yes' : 'No'"></span></p>
             <p>Last Login Date: <span th:text="${user.lastLoginDate}"></span></p>
         </div>
+        <div th:if="${currentUser.id} == ${user.id}">
+            <a th:href="@{/recover-password/{id}(id=${currentUser.id})}">Recover Password</a>
+        </div>
     </section>
+    <a href="#" onclick="history.back()">Back</a>
 </main>
 <footer></footer>
 </body>
