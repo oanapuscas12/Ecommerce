@@ -19,7 +19,7 @@
             <p>Last Login Date: <span th:text="${user.lastLoginDate}"></span></p>
         </div>
         <div th:if="${currentUser.id} == ${user.id}">
-            <a th:href="@{/recover-password/{id}(id=${currentUser.id})}">Recover Password</a>
+            <a th:href="@{/recover-password}">Reset Password</a>
         </div>
     </section>
     <a href="#" onclick="history.back()">Back</a>
