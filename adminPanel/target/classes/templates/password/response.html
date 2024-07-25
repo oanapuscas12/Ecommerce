@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}">Response</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1 th:text="${pageTitle}"></h1>
+
+<div th:if="${message != null}">
+    <p th:text="${message}" class="alert" th:classappend="${success ? 'alert-success' : 'alert-danger'}"></p>
+</div>
+
+<!-- Password Recovery Specific Content -->
+<div th:if="${action == 'recover-password'}">
+    <p th:if="${success}"></p>
+    <p th:if="${!success}"></p>
+    <p>Back to <a href="/login">login</a></p>
+</div>
+
+<!-- Password Reset Specific Content -->
+<div th:if="${action == 'reset-password'}">
+    <p th:if="${success}" th:text="'Password successfully reset. You can now log in with your new password.'"></p>
+    <p th:if="${!success}" th:text="'Invalid or expired token. Please request a new password reset.'"></p>
+    <p>Back to <a href="/login">login</a></p>
+</div>
+
+<!-- Registration Specific Content -->
+<div th:if="${action == 'register'}">
+    <p th:if="${success}" th:text="'Registration successful. Please check your email for verification.'"></p>
+    <p th:if="${!success}" th:text="'There was a problem with your registration. Please try again.'"></p>
+    <p>Back to <a href="/login">login</a></p>
+</div>
+
+</body>
+</html>
