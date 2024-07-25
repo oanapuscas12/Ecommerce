@@ -22,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${users}">
+            <tr th:each="user : ${userPage.content}">
                 <td th:text="${user.username}"></td>
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.active} ? 'Yes' : 'No'"></td>
@@ -40,6 +40,18 @@
             </tr>
             </tbody>
         </table>
+
+        <div class="pagination">
+            <span th:if="${userPage.hasPrevious()}">
+                <a th:href="@{/user/users(role=${role}, page=${userPage.number - 1}, size=${userPage.size})}" aria-label="Previous Page">Previous</a>
+            </span>
+            <span th:if="${userPage.hasNext()}">
+                <a th:href="@{/user/users(role=${role}, page=${userPage.number + 1}, size=${userPage.size})}" aria-label="Next Page">Next</a>
+            </span>
+            <div>
+                <span>Page <span th:text="${userPage.number + 1}"></span> of <span th:text="${userPage.totalPages}"></span></span>
+            </div>
+        </div>
     </section>
     <a href="#" onclick="history.back()">Back</a>
 </main>

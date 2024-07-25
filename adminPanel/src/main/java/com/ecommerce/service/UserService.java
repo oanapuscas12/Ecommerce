@@ -4,12 +4,12 @@ import com.ecommerce.model.User;
 import com.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private EmailSenderService emailSenderService;
 
     @Value("${domain}")
     private String domain;
@@ -46,7 +46,29 @@ public class UserService {
             throw new IllegalArgumentException("Email already exists.");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+
+        String token = generateToken();
+        user.setToken(token);
+        User savedUser = userRepository.save(user);
+
+        String confirmationLink = domain + "/confirm-account?token=" + token;
+        String subject = "Confirm Your Account";
+        String body = "Hello " + user.getUsername() + ",\n\nPlease confirm your account by clicking the link below:\n" + confirmationLink + "\n\nBest regards,\nThe Team";
+//        emailSenderService.sendEmail(user.getEmail(), subject, body);
+
+        return savedUser;
+    }
+
+    public boolean confirmUserAccount(String token) {
+        Optional<User> userOptional = userRepository.findByToken(token);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setActive(true);
+            user.setToken(null);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     public void deactivateUser(Long id) {
@@ -75,12 +97,12 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public List<User> getAllMerchants() {
-        return userRepository.findByIsAdmin(false);
+    public Page<User> getAllAdmins(Pageable pageable) {
+        return userRepository.findByIsAdmin(true, pageable);
     }
 
-    public List<User> getAllAdmins() {
-        return userRepository.findByIsAdmin(true);
+    public Page<User> getAllMerchants(Pageable pageable) {
+        return userRepository.findByIsAdmin(false, pageable);
     }
 
     public void updateUser(Long id, User updatedUser) {
@@ -89,39 +111,31 @@ public class UserService {
             User existingUser = optionalUser.get();
             existingUser.setUsername(updatedUser.getUsername());
             existingUser.setEmail(updatedUser.getEmail());
-            if (!updatedUser.getPassword().isEmpty()) {
-                existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-            }
             existingUser.setAdmin(updatedUser.isAdmin());
             existingUser.setActive(updatedUser.isActive());
             userRepository.save(existingUser);
         }
     }
 
-    private String generatePasswordResetToken() {
-        return UUID.randomUUID().toString();
-    }
-
-    public boolean initiatePasswordReset(String email) {
+    public boolean initiatePasswordRecover(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            String token = generatePasswordResetToken();
+            String token = generateToken();
             user.setToken(token);
             userRepository.save(user);
 
             String resetLink = domain + "/reset-password?token=" + token;
+            String body = "To reset your password, click the link below:\n" + resetLink;
 
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(email);
-            message.setSubject("Password Reset Request");
-            message.setText("To reset your password, click the link below:\n" + resetLink);
-
-            mailSender.send(message);
+//            emailSenderService.sendEmail(email, "Password Reset Request", body);
             return true;
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    public boolean validatePasswordResetToken(String token) {
+        return userRepository.findByToken(token).isPresent();
     }
 
     public boolean resetPassword(String token, String newPassword) {
@@ -136,6 +150,10 @@ public class UserService {
         return false;
     }
 
+    private String generateToken() {
+        return UUID.randomUUID().toString();
+    }
+
     public User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
@@ -143,15 +161,6 @@ public class UserService {
             return userRepository.findByUsername(username).orElse(null);
         } else {
             return null;
-        }
-    }
-
-    public void updatePassword(Long id, String newPassword) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            User existingUser = user.get();
-            existingUser.setPassword(passwordEncoder.encode(newPassword));
-            userRepository.save(existingUser);
         }
     }
 }

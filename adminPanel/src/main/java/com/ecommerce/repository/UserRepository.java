@@ -1,6 +1,8 @@
 package com.ecommerce.repository;
 
 import com.ecommerce.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,7 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.lastLoginDate = CURRENT_TIMESTAMP WHERE u.id = :id")
     void setLastLoginForId(@Param("id") Long id);
 
-    List<User> findByIsAdmin(boolean isAdmin);
+    Page<User> findByIsAdmin(boolean isAdmin, Pageable pageable);
 
     Optional<User> findByToken(String token);
 }

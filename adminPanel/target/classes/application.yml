@@ -13,10 +13,10 @@ spring:
       ddl-auto: update
     show-sql: true
   mail:
-    host:
-    port:
-    username:
-    password:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: 793ab7001@smtp-brevo.com
+    password: KWpOm64CLJ5XGTy3
     properties:
       mail:
         smtp:
@@ -32,17 +32,6 @@ server:
 logging:
   file: ecommerce.log
 
-#mailgun:
-#  api:
-#    url:
-#    credentials:
-#  admin:
-#    mail:
-#mail:
-#  service:
-#    sendEmail: false
-
-#domain: https://
 domain: http://localhost:8000
 user:
   activation:
