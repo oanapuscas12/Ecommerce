@@ -7,28 +7,28 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Login</h1>
+    <h1>Login</h1>
 
-<div th:if="${errorMsg}" class="alert alert-danger">
-    <p th:text="${errorMsg}"></p>
-</div>
-<div th:if="${logoutMsg}" class="alert alert-success">
-    <p th:text="${logoutMsg}"></p>
-</div>
+    <div th:if="${errorMsg}" class="alert alert-danger">
+        <p th:text="${errorMsg}"></p>
+    </div>
+    <div th:if="${logoutMsg}" class="alert alert-success">
+        <p th:text="${logoutMsg}"></p>
+    </div>
 
-<form action="/login" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <a href="/recover-password">Forgot your password?</a>
-    <br>
-    <button type="submit">Login</button>
-    <p>Don't have an account? <a href="/register">
-        Register here.
-    </a></p>
-</form>
+    <form action="/login" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <a href="/recover-password">Forgot your password?</a>
+        <br>
+        <button type="submit">Login</button>
+        <p>Don't have an account? <a href="/register">
+            Register here.
+        </a></p>
+    </form>
 </body>
 </html>

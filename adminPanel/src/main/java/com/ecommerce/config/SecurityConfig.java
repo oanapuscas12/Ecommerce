@@ -4,6 +4,7 @@ import com.ecommerce.security.DatabaseAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,19 +28,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/register", "/resources/**", "/css/**", "/js/**", "/recover-password/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/", "/js/**", "/css/**", "/images/**").permitAll()
+                .antMatchers("/", "/login", "/register", "/resources/**", "/recover-password/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/user/users", true) // Redirect to /admin/users after login
+                .defaultSuccessUrl("/user/users", true)
                 .permitAll()
                 .and()
                 .logout()
-                .logoutUrl("/logout")
-                .permitAll();
+                .permitAll()
+                .and()
+                .csrf().disable();
     }
 
     @Bean
