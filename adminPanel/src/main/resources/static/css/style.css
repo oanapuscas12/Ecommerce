@@ -1,16 +1,16 @@
 body {
     background: radial-gradient(circle, rgba(208,165,226,1) 0%, rgba(199,179,212,0.07326680672268904) 100%);
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: auto;
-    flex-direction: column;
     width: auto;
     font-family: Georgia, serif;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .container {
-    width: 300px;
+    width: auto;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -29,6 +29,7 @@ form {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px 0px #000000;
+    width: fit-content;
 }
 
 label {
@@ -68,6 +69,8 @@ p {
 a {
     color: #830ecf;
     text-decoration: none;
+    width: max-content;
+    display: contents;
 }
 
 a:hover {
@@ -91,4 +94,8 @@ a:hover {
     color: #636161;
     background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(130,222,170,0.773546918767507) 100%);
     border-color: #d6e9c6;
+}
+
+table {
+   text-align: center;
 }

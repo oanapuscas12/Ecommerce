@@ -1,15 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle}">Create User</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/base.css}">
-</head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="layout/base :: head"></head>
+<header th:replace="layout/base :: navigation"></header>
 <body>
-<header th:replace="layout/base :: header"></header>
 <main>
+    <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">Page Title</h1>
     <section th:fragment="content">
         <form th:action="@{/user/users}" method="post">
             <div>
