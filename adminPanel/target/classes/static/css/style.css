@@ -1,5 +1,5 @@
 body {
-    background: radial-gradient(circle, rgba(208,165,226,1) 0%, rgba(199,179,212,0.07326680672268904) 100%);
+    background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
     display: flex;
     height: auto;
     width: auto;
@@ -98,4 +98,37 @@ a:hover {
 
 table {
    text-align: center;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+a {
+    color: #6c63ff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination span, .pagination a {
+    margin: 0 5px;
+    color: #6c63ff;
 }
