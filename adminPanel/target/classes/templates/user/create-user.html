@@ -1,35 +1,39 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:replace="layout/base :: head"></head>
+<head th:replace="layout/base :: head">
+    <link rel="stylesheet" href="style.css">
+</head>
 <header th:replace="layout/base :: navigation"></header>
 <body>
-<main>
-    <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">Page Title</h1>
+<main class="main-container">
+    <h1 th:text="${pageTitle}" class="page-title">Page Title</h1>
     <section th:fragment="content">
-        <form th:action="@{/user/users}" method="post">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div>
-                <label for="admin">Is Admin:</label>
-                <input type="checkbox" id="admin" name="admin">
-            </div>
-            <div>
-                <label for="active">Is Active:</label>
-                <input type="checkbox" id="active" name="active" checked>
-            </div>
-            <button type="submit">Create</button>
-        </form>
-        <a href="#" onclick="history.back()">Back</a>
+        <div class="form-wrapper">
+            <form id="uniqueUserForm" style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); background: #f5f5f5;" th:action="@{/user/users}" method="post" class="custom-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin">Is Admin:</label>
+                    <input type="checkbox" id="admin" name="admin">
+                </div>
+                <div class="form-group">
+                    <label for="active">Is Active:</label>
+                    <input type="checkbox" id="active" name="active" checked>
+                </div>
+                <button type="submit" class="submit-btn">Create</button>
+            </form>
+            <a href="#" onclick="history.back()" class="back-link">Back</a>
+        </div>
     </section>
 </main>
 <footer></footer>

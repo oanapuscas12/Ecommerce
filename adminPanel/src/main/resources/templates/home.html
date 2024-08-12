@@ -9,9 +9,7 @@
     <script th:src="@{/js/home.js}"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 </head>
-
 <body>
-
 <div class="container">
     <div class="header">
         <p class="welcome-message" th:if="${user.username}" th:text="'Welcome, ' + ${user.username} + '!'"></p>
@@ -23,9 +21,15 @@
         </div>
     </div>
     <div class="general-container">
-        <a th:if="${admin}" th:href="@{/user/users(role='admin')}" class="nav-link">View Admins</a>
-        <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" class="nav-link">View Merchants</a>
-        <a th:if="${admin} or ${merchant}" href="/documents" class="nav-link">View Documents</a>
+        <a th:if="${admin}" th:href="@{/user/users(role='admin')}" class="nav-link">
+            <button class="btn">View Admins</button>
+        </a>
+        <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" class="nav-link">
+            <button class="btn">View Merchants</button>
+        </a>
+        <a th:if="${admin} or ${merchant}" href="/documents" class="nav-link">
+            <button class="btn">View Documents</button>
+        </a>
         <button th:if="${admin} or ${merchant}" class="btn">Upload Documents</button>
     </div>
 </div>
