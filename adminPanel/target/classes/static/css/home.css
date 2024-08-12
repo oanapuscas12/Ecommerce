@@ -1,0 +1,62 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    box-sizing: border-box; /* Ensure padding does not affect width */
+}
+
+.welcome-message {
+    font-size: 18px;
+    color: #333;
+}
+
+.clock-date {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-end; /* Align to the right */
+}
+
+.date-label,
+.time-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.date,
+.time {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+}
+
+.general-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex: 1;
+    margin-top: 50px; /* Adjust as needed to account for the header height */
+}
