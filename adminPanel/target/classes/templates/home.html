@@ -9,9 +9,7 @@
     <script th:src="@{/js/home.js}"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 </head>
-
 <body>
-
 <div class="container">
     <div class="header">
         <p class="welcome-message" th:if="${user.username}" th:text="'Welcome, ' + ${user.username} + '!'"></p>

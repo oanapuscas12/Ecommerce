@@ -15,7 +15,6 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
-    background: white;
 }
 
 h1, h2 {
@@ -25,8 +24,6 @@ h1, h2 {
 
 form {
     background: white;
-    padding: 20px;
-    border-radius: 5px;
     box-shadow: 0px 0px 10px 0px #000000;
     width: fit-content;
 }
@@ -44,17 +41,6 @@ input {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #5fcc83;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
 }
 
 button:hover {
@@ -105,22 +91,6 @@ body {
     margin: 0;
 }
 
-h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
-}
-
-a {
-    color: #6c63ff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 .pagination {
     margin-top: 20px;
     text-align: center;
@@ -130,3 +100,77 @@ a:hover {
     margin: 0 5px;
     color: #6c63ff;
 }
+
+main {
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+      }
+
+table th, table td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+      }
+
+table th {
+        background-color: #f4f4f9;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+table tr:hover {
+        background-color: #f1f1f1;
+      }
+
+        /* Style for action links */
+table td a {
+        margin-right: 8px;
+        color: #4c1d95;
+        text-decoration: none;
+        padding: 5px 10px;
+        border: 1px solid #4c1d95;
+        border-radius: 3px;
+        font-size: 0.85rem;
+        display: inline-block;
+      }
+
+table td button {
+        padding: 5px 10px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        display: inline-block;
+      }
+
+table td button:hover, table td a:hover {
+        opacity: 0.9;
+      }
+
+@media (max-width: 768px) {
+        table, th, td {
+           display: block;
+           width: 100%;
+           text-align: center;
+        }
+
+        .pagination {
+           flex-direction: column;
+           text-align: center;
+        }
+
+        .pagination div {
+           margin-top: 10px;
+          }
+        }
