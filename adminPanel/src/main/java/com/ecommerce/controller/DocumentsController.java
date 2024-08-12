@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class DocumentsController {
-
+    @GetMapping("/documents")
+    public String startPage() {
+        return "documents";
+    }
 }
 

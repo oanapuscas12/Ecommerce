@@ -13,6 +13,9 @@ body {
     flex-direction: column;
     width: 100%;
     height: 100%;
+    padding:0;
+    border: none;
+    box-shadow: none;
 }
 
 .header {
@@ -32,23 +35,19 @@ body {
 
 .clock-date {
     display: flex;
-    flex-direction: column; /* Stack items vertically */
-    align-items: flex-end; /* Align to the right */
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
 }
 
-.date-label,
-.time-label {
-    font-size: 16px;
-    font-weight: bold;
+.clock {
+    font-size: 18px;
     color: #333;
-    margin: 0;
 }
 
-.date,
-.time {
+.date {
     font-size: 16px;
     color: #333;
-    margin: 0;
 }
 
 .general-container {
@@ -58,5 +57,24 @@ body {
     justify-content: center;
     gap: 10px;
     flex: 1;
-    margin-top: 50px; /* Adjust as needed to account for the header height */
+    margin-top: 50px;
+}
+
+.btn {
+    display: block;
+    width: 10%;
+    height: 12%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.btn:hover {
+    background-color: #0056b3;
 }
