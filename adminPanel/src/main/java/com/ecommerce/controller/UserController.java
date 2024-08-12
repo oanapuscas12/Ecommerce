@@ -75,7 +75,7 @@ public class UserController {
         model.addAttribute("user", new User());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", "Admin");
-        model.addAttribute("pageTitle", "Create new User");
+        model.addAttribute("pageTitle", "Create new user");
         return "user/create-user";
     }
 
