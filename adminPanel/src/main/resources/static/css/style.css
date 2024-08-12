@@ -1,14 +1,11 @@
 body {
-    background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
-    display: flex;
+    background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);    display: flex;
     height: auto;
     width: auto;
-    font-family: 'Roboto', sans-serif;
+    font-family: Georgia, serif;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0;
-    background-color: #f0f2f5;
 }
 
 .container {
@@ -57,7 +54,8 @@ p {
 a {
     color: #830ecf;
     text-decoration: none;
-    display: inline-block;
+    width: max-content;
+    display: contents;
 }
 
 a:hover {
@@ -73,72 +71,24 @@ a:hover {
 
 .alert-danger {
     color: #636161;
-    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(204,67,65,0.541) 100%);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(204,67,65,0.5410539215686274) 100%);
     border-color: #ebccd1;
 }
 
 .alert-success {
     color: #636161;
-    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(130,222,170,0.773) 100%);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(130,222,170,0.773546918767507) 100%);
     border-color: #d6e9c6;
 }
 
-main {
-    width: 90%;
-    margin: 20px auto;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    font-size: 0.9rem;
-    text-align: center;
+   text-align: center;
 }
 
-table th, table td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-}
-
-table th {
-    background-color: #f4f4f9;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Style for action links */
-table td a {
-    margin-right: 8px;
-    color: #4c1d95;
-    text-decoration: none;
-    padding: 5px 10px;
-    border: 1px solid #4c1d95;
-    border-radius: 3px;
-    font-size: 0.85rem;
-    display: inline-block;
-}
-
-table td button {
-    padding: 5px 10px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 0.85rem;
-    display: inline-block;
-}
-
-table td button:hover, table td a:hover {
-    opacity: 0.9;
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
 }
 
 .pagination {
@@ -151,19 +101,76 @@ table td button:hover, table td a:hover {
     color: #6c63ff;
 }
 
-@media (max-width: 768px) {
-    table, th, td {
-        display: block;
+main {
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+table {
         width: 100%;
-        text-align: center;
-    }
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+      }
 
-    .pagination {
-        flex-direction: column;
-        text-align: center;
-    }
+table th, table td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+      }
 
-    .pagination div {
-        margin-top: 10px;
-    }
-}
+table th {
+        background-color: #f4f4f9;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+table tr:hover {
+        background-color: #f1f1f1;
+      }
+
+        /* Style for action links */
+table td a {
+        margin-right: 8px;
+        color: #4c1d95;
+        text-decoration: none;
+        padding: 5px 10px;
+        border: 1px solid #4c1d95;
+        border-radius: 3px;
+        font-size: 0.85rem;
+        display: inline-block;
+      }
+
+table td button {
+        padding: 5px 10px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        display: inline-block;
+      }
+
+table td button:hover, table td a:hover {
+        opacity: 0.9;
+      }
+
+@media (max-width: 768px) {
+        table, th, td {
+           display: block;
+           width: 100%;
+           text-align: center;
+        }
+
+        .pagination {
+           flex-direction: column;
+           text-align: center;
+        }
+
+        .pagination div {
+           margin-top: 10px;
+          }
+        }
