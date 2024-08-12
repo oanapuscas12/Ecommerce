@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <script th:src="@{/js/home.js}"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">
+        <p class="welcome-message" th:if="${user.username}" th:text="'Welcome, ' + ${user.username} + '!'"></p>
+        <div class="clock-date">
+            <p class="date-label">Date:</p>
+            <p class="date">Loading...</p>
+            <p class="time-label">Time:</p>
+            <p class="time">Loading...</p>
+        </div>
+    </div>
+    <div class="general-container">
+        <a th:if="${admin}" th:href="@{/user/users(role='admin')}" class="nav-link">View Admins</a>
+        <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" class="nav-link">View Merchants</a>
+        <a th:if="${admin} or ${merchant}" href="/documents" class="nav-link">View Documents</a>
+        <button th:if="${admin} or ${merchant}" class="btn">Upload Documents</button>
+    </div>
+</div>
+</body>
+</html>
