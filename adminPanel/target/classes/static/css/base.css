@@ -3,12 +3,20 @@
 }
 
 .bg-light {
-    background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
+    background: radial-gradient(circle, rgba(169, 169, 169, 1) 0%, rgba(105, 105, 105, 1) 100%);
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: white;
 }
 
 @media (max-width: 768px) {
+
+    .bg-light {
+        background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
+    }
     button:hover {
-        background-color: inherit;
+        background-color: none!;
     }
 
     .navbar-toggler-icon {
@@ -16,10 +24,14 @@
     }
 
     .navbar {
-        width: fit-content;
+        width: auto;
     }
 
     .navbar-toggler:hover {
         text-decoration: none !important;
+    }
+
+    .navbar-light .navbar-toggler {
+        display: contents;
     }
 }
