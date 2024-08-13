@@ -25,7 +25,7 @@ body {
     position: absolute;
     width: 100%;
     top: 0;
-    box-sizing: border-box; /* Ensure padding does not affect width */
+    box-sizing: border-box;
 }
 
 .welcome-message {
@@ -77,4 +77,8 @@ body {
 
 .btn:hover {
     background-color: #0056b3;
+}
+
+a{
+    color:#333;
 }
