@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
-<main>
+<main style="background-color: #e0e0e0; border: 1px solid #ccc; border-radius: 5px; box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);">
     <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">Page Title</h1>
     <section th:fragment="content">
         <a th:if="${user.isAdmin}" th:href="@{/user/users?role=admin}">Back to Admin List</a>
         <a th:unless="${user.isAdmin}" th:href="@{/user/users?role=merchant}">Back to Merchants List</a>
 
-        <form th:action="@{/user/users/edit/{id}(id=${user.id})}" style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); background: #e0e0e0;" th:object="${user}" method="post">            <div>
+        <div th:action="@{/user/users/edit/{id}(id=${user.id})}" style="max-width: 600px; background-color: transparent; margin: 0 auto;" th:object="${user}" method="post">            <div>
                 <label for="username">Username:</label>
                 <input type="text" id="username" th:field="*{username}" required>
             </div>
@@ -25,7 +25,7 @@
                 <input type="checkbox" id="active" th:field="*{active}">
             </div>
             <button type="submit">Save Changes</button>
-        </form>
+        </div>
         <a href="#" onclick="history.back()">Back</a>
     </section>
 </main>
