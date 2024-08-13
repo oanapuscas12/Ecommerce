@@ -28,10 +28,12 @@
         <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" class="nav-link">
             <button class="btn">View Merchants</button>
         </a>
-        <a th:if="${admin} or ${merchant}" href="/documents" class="nav-link">
+        <a th:if="${admin} or ${merchant}" href="/documents/documents-list" class="nav-link">
             <button class="btn">View Documents</button>
         </a>
-        <button th:if="${admin} or ${merchant}" class="btn">Upload Documents</button>
+        <a th:if="${admin} or ${merchant}" href="/documents/upload-document" class="nav-link">
+            <button class="btn">Upload Documents</button>
+        </a>
     </div>
 </div>
 </body>

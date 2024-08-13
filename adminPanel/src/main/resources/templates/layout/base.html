@@ -26,6 +26,11 @@
                         <a th:href="@{/user/users(role=${otherRole})}" class="nav-link" th:text="'View ' + ${otherRole} + 's'">View Other Role</a>
                     </li>
                 </ul>
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a th:href="@{/documents/upload-document}" class="nav-link">Upload Document</a>
+                    </li>
+                </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a th:href="@{/home}" class="nav-link">Home</a>
