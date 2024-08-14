@@ -78,10 +78,15 @@ public class DocumentsController {
     @GetMapping("/upload-document")
     public String uploadDocument(Model model, @RequestParam(required = false) String role) {
         String pageRole = role != null ? role : "admin";
-        User currentUser = userService.getCurrentUser();
         String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
         model.addAttribute("role", pageRole);
-        model.addAttribute("currentUser", currentUser);
+        User currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            model.addAttribute("currentUser", currentUser);
+        }
+        assert currentUser != null;
+        System.out.println(currentUser.getId());
+
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", pageRole.substring(0, 1).toUpperCase() + pageRole.substring(1) + "s List");
 
@@ -89,7 +94,6 @@ public class DocumentsController {
             model.addAttribute("isAdmin", userService.isAdmin());
             if (userService.isAdmin()) {
                 model.addAttribute("users", userService.getNonAdminUsersExcluding(currentUser.getId()));
-                model.addAttribute("currentUserId", currentUser.getId());
             }
             return "documents/upload-document";
         } else {
@@ -101,15 +105,18 @@ public class DocumentsController {
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    @RequestParam(value = "userId", required = false) Long userId,
                                    Model model) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser != null) {
+            model.addAttribute("currentUser", currentUser);
+        }
+
         if (!userService.isMerchant() && !userService.isAdmin()) {
             return "error/403";
         }
 
         model.addAttribute("isAdmin", userService.isAdmin());
         if (userService.isAdmin()) {
-            User currentUser = userService.getCurrentUser();
             model.addAttribute("users", userService.getNonAdminUsersExcluding(currentUser.getId()));
-            model.addAttribute("currentUserId", currentUser.getId());
         }
 
         try {

@@ -1,4 +1,5 @@
- function updateDateTime() {
+document.addEventListener('DOMContentLoaded', function() {
+    function updateDateTime() {
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -10,9 +11,17 @@
         const dateString = `${day}-${month}-${year}`;
         const timeString = `${hours}:${minutes}:${seconds}`;
 
-        document.querySelector('.date').textContent = dateString;
-        document.querySelector('.time').textContent = timeString;
+        const dateElement = document.querySelector('.date');
+        const timeElement = document.querySelector('.time');
+
+        if (dateElement) {
+            dateElement.textContent = dateString;
+        }
+        if (timeElement) {
+            timeElement.textContent = timeString;
+        }
     }
 
-    setInterval(updateDateTime, 1000); // Update every second
+    setInterval(updateDateTime, 1000);
     updateDateTime();
+});

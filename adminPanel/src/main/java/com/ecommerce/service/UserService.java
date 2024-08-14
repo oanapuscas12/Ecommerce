@@ -176,10 +176,8 @@ public class UserService {
     }
 
     public List<User> getNonAdminUsersExcluding(Long excludeUserId) {
-        // Fetch all users
         List<User> allUsers = userRepository.findAll();
 
-        // Use streams to filter out admin users and exclude the specific user
         return allUsers.stream()
                 .filter(user -> !user.isAdmin() && !user.getId().equals(excludeUserId))
                 .collect(Collectors.toList());
