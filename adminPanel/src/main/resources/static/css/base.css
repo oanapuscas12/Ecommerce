@@ -1,37 +1,47 @@
 .navigation-navbar {
-    width: -webkit-fill-available;
+    width: 100%;
 }
 
 .bg-light {
-    background: radial-gradient(circle, rgba(169, 169, 169, 1) 0%, rgba(105, 105, 105, 1) 100%);
+    background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
+}
+
+.navbar {
+    box-sizing: border-box;
+    padding: 0 1rem;
 }
 
 .navbar-light .navbar-nav .nav-link {
     color: white;
+    transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-light .navbar-toggler {
+    border: 1px solid black;
+    border-radius: 0.25rem;
+    transition: box-shadow 0.3s;
+}
+
+.navbar-light .navbar-toggler:hover {
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 768px) {
-
     .bg-light {
         background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
     }
-    button:hover {
-        background-color: none!;
-    }
-
-    .navbar-toggler-icon {
-        display: flex;
-    }
-
     .navbar {
-        width: auto;
-    }
-
-    .navbar-toggler:hover {
-        text-decoration: none !important;
-    }
-
-    .navbar-light .navbar-toggler {
-        display: contents;
+        padding: 0 0.5rem;
     }
 }
