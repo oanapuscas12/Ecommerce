@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -162,5 +163,25 @@ public class UserService {
         } else {
             return null;
         }
+    }
+
+    public boolean isAdmin() {
+        User user = getCurrentUser();
+        return user != null && user.isAdmin();
+    }
+
+    public boolean isMerchant() {
+        User user = getCurrentUser();
+        return user != null && !user.isAdmin();
+    }
+
+    public List<User> getNonAdminUsersExcluding(Long excludeUserId) {
+        // Fetch all users
+        List<User> allUsers = userRepository.findAll();
+
+        // Use streams to filter out admin users and exclude the specific user
+        return allUsers.stream()
+                .filter(user -> !user.isAdmin() && !user.getId().equals(excludeUserId))
+                .collect(Collectors.toList());
     }
 }

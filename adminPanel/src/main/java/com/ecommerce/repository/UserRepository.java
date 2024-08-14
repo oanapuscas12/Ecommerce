@@ -27,6 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void setLastLoginForId(@Param("id") Long id);
 
     Page<User> findByIsAdmin(boolean isAdmin, Pageable pageable);
+    Optional<User> findByIsAdmin(boolean isAdmin);
 
     Optional<User> findByToken(String token);
 }

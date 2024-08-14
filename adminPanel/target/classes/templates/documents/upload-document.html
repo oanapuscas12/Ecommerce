@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Upload document</title>
+    <link rel="stylesheet" th:href="@{/css/upload-document.css}">
+    <script th:src="@{/js/upload-document.js}"></script>
+    <title>Upload Documents</title>
 </head>
-<body>
-<p>Upload Document</p>
-</body>
+<head th:replace="layout/base :: head"></head>
+<header th:replace="layout/base :: navigation"></header>
+<main>
+    <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">Upload Documents</h1>
+    <section th:fragment="content">
+        <form id="uploadForm" action="#" th:action="@{/documents/upload-document}" method="post"
+              enctype="multipart/form-data">
+            <div th:if="${isAdmin}">
+                <label>
+                    Select Merchant:
+                    <select name="userId" required>
+                        <option value="">Select a merchant</option>
+                        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}"></option>
+                    </select>
+                </label>
+            </div>
+
+            <label>
+                Choose File:
+                <input type="file" name="file" accept=".pdf,.xml" required>
+            </label>
+
+            <button type="submit">Upload</button>
+        </form>
+
+        <p id="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}" class="error-message"></p>
+        <p id="success-message" th:if="${successMessage != null}" th:text="${successMessage}"
+           class="success-message"></p>
+    </section>
+</main>
 </html>

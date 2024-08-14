@@ -8,11 +8,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,6 +44,9 @@ public class User extends BaseEntity {
 
     @Column(name = "token")
     private String token;
+
+    @OneToMany(mappedBy = "uploadedBy")
+    private Set<Document> documents;
 
     public boolean isAdmin() {
         return isAdmin;
