@@ -15,7 +15,7 @@
     <section th:fragment="content">
         <div th:if="${isAdmin}" class="filter-container">
             <form action="#" th:action="@{/documents/documents-list}" method="get" class="filter-form">
-                <label for="merchantId">Filter by Merchant:</label>
+                <label for="merchantId"></label>
                 <select name="merchantId" id="merchantId">
                     <option value="">All Merchants</option>
                     <option th:each="merchant : ${merchants}" th:value="${merchant.id}"

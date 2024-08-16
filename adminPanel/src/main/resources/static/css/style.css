@@ -205,20 +205,20 @@ thead th:last-child {
 .filter-container {
     margin: 20px 0;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .filter-form {
-    background: #fff;
-    padding: 15px;
-    border-radius: 5px;
+    background: #9fbfbd;
+    padding: 6px;
+    border-radius: 3px;
     display: flex;
     align-items: center;
     border: 1px solid #ddd;
 }
 
 .filter-form label {
-    margin-right: 10px;
+    background: #9fbfbd;
     font-weight: bold;
 }
 
@@ -227,16 +227,18 @@ thead th:last-child {
     margin-right: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 10px;
 }
 
 .filter-form button {
-    padding: 8px 15px;
+    padding: 4px 8px;
     border: none;
     border-radius: 4px;
     background-color: #007bff;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 10px;
 }
 
 .filter-form button:hover {
