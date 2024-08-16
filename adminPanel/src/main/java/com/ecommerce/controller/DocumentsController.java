@@ -90,6 +90,8 @@ public class DocumentsController {
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", pageRole.substring(0, 1).toUpperCase() + pageRole.substring(1) + "s List");
 
+        model.addAttribute("pageTitle", "Upload Document");
+
         if (userService.isMerchant() || userService.isAdmin()) {
             model.addAttribute("isAdmin", userService.isAdmin());
             if (userService.isAdmin()) {
