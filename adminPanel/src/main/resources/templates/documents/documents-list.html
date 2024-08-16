@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="layout/base :: head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documents List</title>
     <script th:src="@{/js/documents-list.js}"></script>
     <link rel="stylesheet" th:href="@{/css/documents-list.css}">
 </head>
-<head th:replace="layout/base :: head"></head>
+<body>
 <header th:replace="layout/base :: navigation"></header>
 <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">List of Documents</h1>
+
 <main>
     <section th:fragment="content">
-        <div th:if="${isAdmin}">
-            <form action="#" th:action="@{/documents/documents-list}" method="get">
+        <div th:if="${isAdmin}" class="filter-container">
+            <form action="#" th:action="@{/documents/documents-list}" method="get" class="filter-form">
                 <label for="merchantId">Filter by Merchant:</label>
                 <select name="merchantId" id="merchantId">
                     <option value="">All Merchants</option>
                     <option th:each="merchant : ${merchants}" th:value="${merchant.id}"
                             th:text="${merchant.username}"></option>
                 </select>
+                <button type="submit">Apply Filter</button>
             </form>
         </div>
 
@@ -48,14 +50,16 @@
         </table>
     </section>
 
-    <div>
-    <span th:if="${documents.hasPrevious()}">
-    <a th:href="@{/documents/documents-list(page=${documents.number - 1}, size=${documents.size}, merchantId=${param.merchantId})}">Previous</a>
-    </span>
+    <div class="pagination">
+        <span th:if="${documents.hasPrevious()}">
+            <a th:href="@{/documents/documents-list(page=${documents.number - 1}, size=${documents.size}, merchantId=${param.merchantId})}">Previous</a>
+        </span>
         <span th:if="${documents.hasNext()}">
-    <a th:href="@{/documents/documents-list(page=${documents.number + 1}, size=${documents.size}, merchantId=${param.merchantId})}">Next</a>
-    </span>
+            <a th:href="@{/documents/documents-list(page=${documents.number + 1}, size=${documents.size}, merchantId=${param.merchantId})}">Next</a>
+        </span>
     </div>
+
     <a href="#" onclick="history.back()">Back</a>
 </main>
+</body>
 </html>
