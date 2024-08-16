@@ -100,7 +100,8 @@ button:not(:disabled) {
 
 .general-container {
     display: flex;
-    flex-direction: center;
+    flex-direction: row; /* Sau 'column' pentru orientare pe verticală */
+    justify-content: center; /* Centrează pe orizontală */
     align-items: center;
     flex-direction: row;
     gap: 50px;
@@ -110,8 +111,9 @@ button:not(:disabled) {
 
 .column {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: column; /* Sau 'row' pentru butoane aliniate pe orizontală */
+    align-items: center; /* Centrează butoanele în interiorul coloanei */
+    gap: 20px; /* Spațiu între butoane */
 }
 
 .logout-button-desktop{
