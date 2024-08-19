@@ -37,6 +37,9 @@
             <a th:if="${admin} or ${merchant}" href="/documents/documents-list" class="nav-link">
                 <button class="btn">View Documents List</button>
             </a>
+            <a th:if="${admin} or ${merchant}" href="/reports" class="nav-link">
+                <button class="btn">View Reports</button>
+            </a>
         </div>
         <div class="column">
             <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" class="nav-link">
