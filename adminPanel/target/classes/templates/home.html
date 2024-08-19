@@ -30,18 +30,25 @@
         </div>
     </div>
     <div class="general-container">
-        <a th:if="${admin}" th:href="@{/user/users(role='admin')}">
-            <button class="btn btn-outline-light container_button">View Admins</button>
-        </a>
-        <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}">
-            <button class="btn btn-outline-light container_button">View Merchants</button>
-        </a>
-        <a th:if="${admin} or ${merchant}" href="/documents/documents-list">
-            <button class="btn btn-outline-light container_button">View Documents List</button>
-        </a>
-        <a th:if="${admin} or ${merchant}" href="/documents/upload-document">
-            <button class="btn btn-outline-light container_button">Upload Documents</button>
-        </a>
+        <div class="column">
+            <a th:if="${admin}" th:href="@{/user/users(role='admin')}" class="nav-link">
+                <button class="btn">View Admins</button>
+            </a>
+            <a th:if="${admin} or ${merchant}" href="/documents/documents-list" class="nav-link">
+                <button class="btn">View Documents List</button>
+            </a>
+            <a th:if="${admin} or ${merchant}" href="/reports" class="nav-link">
+                <button class="btn">View Reports</button>
+            </a>
+        </div>
+        <div class="column">
+            <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" class="nav-link">
+                <button class="btn">View Merchants</button>
+            </a>
+            <a th:if="${admin} or ${merchant}" href="/documents/upload-document" class="nav-link">
+                <button class="btn">Upload Documents</button>
+            </a>
+        </div>
     </div>
 </div>
 </body>

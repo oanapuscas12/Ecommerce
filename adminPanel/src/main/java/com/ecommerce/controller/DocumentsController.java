@@ -68,7 +68,7 @@ public class DocumentsController {
         model.addAttribute("role", pageRole);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
-        model.addAttribute("pageTitle", pageRole.substring(0, 1).toUpperCase() + pageRole.substring(1) + "s List");
+        model.addAttribute("pageTitle", "View Document List");
         model.addAttribute("userPage", userPage);
 
         return "documents/documents-list";
@@ -85,11 +85,7 @@ public class DocumentsController {
             model.addAttribute("currentUser", currentUser);
         }
         assert currentUser != null;
-        System.out.println(currentUser.getId());
-
         model.addAttribute("otherRole", otherRole);
-        model.addAttribute("pageTitle", pageRole.substring(0, 1).toUpperCase() + pageRole.substring(1) + "s List");
-
         model.addAttribute("pageTitle", "Upload Document");
 
         if (userService.isMerchant() || userService.isAdmin()) {
