@@ -11,9 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.YearMonth;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -181,5 +183,31 @@ public class UserService {
         return allUsers.stream()
                 .filter(user -> !user.isAdmin() && !user.getId().equals(excludeUserId))
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, Long> getMonthlyMerchantEnrollments(int year) {
+        List<User> allUsers = userRepository.findAll();
+
+        List<User> nonAdminUsers = allUsers.stream()
+                .filter(user -> !user.isAdmin())
+                .collect(Collectors.toList());
+
+        Map<String, Long> monthlyEnrollments = new HashMap<>();
+
+        for (Month month : Month.values()) {
+            YearMonth yearMonth = YearMonth.of(year, month);
+
+            LocalDateTime startOfMonth = yearMonth.atDay(1).atStartOfDay();
+            LocalDateTime endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+
+            long count = nonAdminUsers.stream()
+                    .filter(user -> user.getCreatedDate().isAfter(startOfMonth.minusNanos(1)) &&
+                            user.getCreatedDate().isBefore(endOfMonth.plusNanos(1)))
+                    .count();
+
+            monthlyEnrollments.put(month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), count);
+        }
+
+        return monthlyEnrollments;
     }
 }

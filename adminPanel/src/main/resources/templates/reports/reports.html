@@ -2,17 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/upload-document.css}">
-    <script th:src="@{/js/upload-document.js}"></script>
-    <title>Upload Documents</title>
+    <title th:text="${pageTitle}">View Reports</title>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script th:src="@{/js/reports-chart.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/pie.css}">
+    <head th:replace="layout/base :: head"></head>
 </head>
-<head th:replace="layout/base :: head"></head>
+<body>
 <header th:replace="layout/base :: navigation"></header>
 <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">View Reports</h1>
 <main class="main">
     <section th:fragment="content">
-
-
+        <input type="hidden" id="chart1-first-data" th:value="${monthsJson}"/>
+        <input type="hidden" id="chart1-second-data" th:value="${enrollmentsJson}"/>
+        <div id="chart1" data-chart-id="chart1" data-chart-title="Enrollment Merchants/Months Overview" style="height: 370px; width: 100%;"></div>
     </section>
 </main>
+</body>
 </html>
