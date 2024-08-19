@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 public class ReportsController {
@@ -23,14 +22,10 @@ public class ReportsController {
     private UserService userService;
 
     @GetMapping("/reports")
-    public String reportsPage(Model model, @RequestParam(required = false) String role) throws JsonProcessingException {
-        String pageRole = role != null ? role : "admin";
-        String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
+    public String reportsPage(Model model) throws JsonProcessingException {
         User currentUser = userService.getCurrentUser();
-
-        if (currentUser != null) {
-            model.addAttribute("currentUser", currentUser);
-        }
+        String role = currentUser.isAdmin()? "admin" : "merchant";
+        String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
 
         int currentYear = LocalDate.now().getYear();
 
@@ -47,7 +42,8 @@ public class ReportsController {
         model.addAttribute("monthsForMerchantsJson", monthsForMerchantsJson);
         model.addAttribute("merchantsEnrollmentsForMerchantsJson", merchantsEnrollmentsForMerchantsJson);
 
-        model.addAttribute("role", pageRole);
+        model.addAttribute("role", role);
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "View Reports");
         return "reports/reports";
