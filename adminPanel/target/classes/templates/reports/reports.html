@@ -13,8 +13,8 @@
 <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">View Reports</h1>
 <main class="main">
     <section th:fragment="content">
-        <input type="hidden" id="chart1-first-data" th:value="${monthsJson}"/>
-        <input type="hidden" id="chart1-second-data" th:value="${enrollmentsJson}"/>
+        <input type="hidden" id="chart1-first-data" th:value="${monthsForMerchantsJson}"/>
+        <input type="hidden" id="chart1-second-data" th:value="${merchantsEnrollmentsForMerchantsJson}"/>
         <div id="chart1" data-chart-id="chart1" data-chart-title="Enrollment Merchants/Months Overview" style="height: 370px; width: 100%;"></div>
     </section>
 </main>
