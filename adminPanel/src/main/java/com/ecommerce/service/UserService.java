@@ -11,9 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.YearMonth;
+import java.time.*;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -185,11 +183,13 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public Map<String, Long> getMonthlyMerchantEnrollments(int year) {
+    public Map<String, Long> getAllMonthlyMerchantEnrollments(int year) {
+        // Fetch all users from the repository
         List<User> allUsers = userRepository.findAll();
 
-        List<User> nonAdminUsers = allUsers.stream()
-                .filter(user -> !user.isAdmin())
+        // Filter out the merchant users (users who are not admins)
+        List<User> merchantUsers = allUsers.stream()
+                .filter(user -> !user.isAdmin()) // Assuming isAdmin() returns true for admin users
                 .collect(Collectors.toList());
 
         Map<String, Long> monthlyEnrollments = new HashMap<>();
@@ -197,14 +197,53 @@ public class UserService {
         for (Month month : Month.values()) {
             YearMonth yearMonth = YearMonth.of(year, month);
 
-            LocalDateTime startOfMonth = yearMonth.atDay(1).atStartOfDay();
-            LocalDateTime endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+            LocalDate startOfMonth = yearMonth.atDay(1);
+            LocalDate endOfMonth = yearMonth.atEndOfMonth();
 
-            long count = nonAdminUsers.stream()
-                    .filter(user -> user.getCreatedDate().isAfter(startOfMonth.minusNanos(1)) &&
-                            user.getCreatedDate().isBefore(endOfMonth.plusNanos(1)))
+            LocalDateTime startOfMonthDateTime = startOfMonth.atStartOfDay();
+            LocalDateTime endOfMonthDateTime = endOfMonth.atTime(LocalTime.MAX);
+
+            long count = merchantUsers.stream()
+                    .filter(user -> {
+                        LocalDateTime userCreatedDateTime = user.getCreatedDate();
+                        return (userCreatedDateTime.isEqual(startOfMonthDateTime) || userCreatedDateTime.isAfter(startOfMonthDateTime)) &&
+                                (userCreatedDateTime.isEqual(endOfMonthDateTime) || userCreatedDateTime.isBefore(endOfMonthDateTime));
+                    })
                     .count();
+            System.out.println(count);
+            monthlyEnrollments.put(month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), count);
+        }
 
+        return monthlyEnrollments;
+    }
+
+
+    public Map<String, Long> getAllMonthlyAdminEnrollmentPercentages(int year) {
+        List<User> allUsers = userRepository.findAll();
+
+        List<User> merchantUsers = allUsers.stream()
+                .filter(User::isAdmin)
+                .collect(Collectors.toList());
+
+        Map<String, Long> monthlyEnrollments = new HashMap<>();
+
+        for (Month month : Month.values()) {
+            YearMonth yearMonth = YearMonth.of(year, month);
+
+            LocalDate startOfMonth = yearMonth.atDay(1);
+            LocalDate endOfMonth = yearMonth.atEndOfMonth();
+
+            LocalDateTime startOfMonthDateTime = startOfMonth.atStartOfDay();
+            LocalDateTime endOfMonthDateTime = endOfMonth.atTime(LocalTime.MAX);
+
+            long count = merchantUsers.stream()
+                    .filter(user -> {
+                        LocalDateTime userCreatedDateTime = user.getCreatedDate();
+                        return (userCreatedDateTime.isEqual(startOfMonthDateTime) || userCreatedDateTime.isAfter(startOfMonthDateTime)) &&
+                                (userCreatedDateTime.isEqual(endOfMonthDateTime) || userCreatedDateTime.isBefore(endOfMonthDateTime));
+                    })
+                    .count();
+            System.out.println(count);
             monthlyEnrollments.put(month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), count);
         }
 
