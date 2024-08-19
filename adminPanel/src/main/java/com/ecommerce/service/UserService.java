@@ -210,40 +210,6 @@ public class UserService {
                                 (userCreatedDateTime.isEqual(endOfMonthDateTime) || userCreatedDateTime.isBefore(endOfMonthDateTime));
                     })
                     .count();
-            System.out.println(count);
-            monthlyEnrollments.put(month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), count);
-        }
-
-        return monthlyEnrollments;
-    }
-
-
-    public Map<String, Long> getAllMonthlyAdminEnrollmentPercentages(int year) {
-        List<User> allUsers = userRepository.findAll();
-
-        List<User> merchantUsers = allUsers.stream()
-                .filter(User::isAdmin)
-                .collect(Collectors.toList());
-
-        Map<String, Long> monthlyEnrollments = new HashMap<>();
-
-        for (Month month : Month.values()) {
-            YearMonth yearMonth = YearMonth.of(year, month);
-
-            LocalDate startOfMonth = yearMonth.atDay(1);
-            LocalDate endOfMonth = yearMonth.atEndOfMonth();
-
-            LocalDateTime startOfMonthDateTime = startOfMonth.atStartOfDay();
-            LocalDateTime endOfMonthDateTime = endOfMonth.atTime(LocalTime.MAX);
-
-            long count = merchantUsers.stream()
-                    .filter(user -> {
-                        LocalDateTime userCreatedDateTime = user.getCreatedDate();
-                        return (userCreatedDateTime.isEqual(startOfMonthDateTime) || userCreatedDateTime.isAfter(startOfMonthDateTime)) &&
-                                (userCreatedDateTime.isEqual(endOfMonthDateTime) || userCreatedDateTime.isBefore(endOfMonthDateTime));
-                    })
-                    .count();
-            System.out.println(count);
             monthlyEnrollments.put(month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), count);
         }
 
