@@ -33,23 +33,21 @@ public class DocumentsController {
     private UserService userService;
 
     @GetMapping("/documents-list")
-    public String documentsList(@RequestParam(required = false) String role,
-                                @RequestParam(value = "merchantId", required = false) Long merchantId,
-                                @RequestParam(value = "page", defaultValue = "0") int page,
-                                @RequestParam(value = "size", defaultValue = "10") int size,
-                                Model model) {
+    public String documentsList(
+            @RequestParam(value = "merchantId", required = false) Long merchantId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        String pageRole = role != null ? role : "admin";
         User currentUser = userService.getCurrentUser();
+        String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
 
         Page<User> userPage;
         if ("admin".equalsIgnoreCase(pageRole)) {
             userPage = userService.getAllAdmins(pageable);
-        } else if ("merchant".equalsIgnoreCase(pageRole)) {
-            userPage = userService.getAllMerchants(pageable);
         } else {
-            return "redirect:/user/users?role=admin";
+            userPage = userService.getAllMerchants(pageable);
         }
 
         if (userService.isMerchant()) {
@@ -76,15 +74,13 @@ public class DocumentsController {
 
 
     @GetMapping("/upload-document")
-    public String uploadDocument(Model model, @RequestParam(required = false) String role) {
-        String pageRole = role != null ? role : "admin";
-        String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
-        model.addAttribute("role", pageRole);
+    public String uploadDocument(Model model) {
         User currentUser = userService.getCurrentUser();
-        if (currentUser != null) {
-            model.addAttribute("currentUser", currentUser);
-        }
-        assert currentUser != null;
+        String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
+        String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("role", pageRole);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "Upload Document");
 
