@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 data: [{
                     type: "pie",
                     showInLegend: true,
-                    toolTipContent: "{name}: <strong>{y}</strong>", // Display the exact value
-                    indexLabel: "{name} - {y}", // Display the exact value
+                    toolTipContent: "{name}: <strong>{y}</strong> ", // Display the exact value
+                    indexLabel: "{name} - {y} ", // Display the exact value
                     dataPoints: dataPoints
                 }]
             });

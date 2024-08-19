@@ -47,21 +47,6 @@ public class ReportsController {
         model.addAttribute("monthsForMerchantsJson", monthsForMerchantsJson);
         model.addAttribute("merchantsEnrollmentsForMerchantsJson", merchantsEnrollmentsForMerchantsJson);
 
-        // Data for Enrollment Admins/Months Overview
-        Map<String, Long> monthlyAdminsEnrollments = userService.getAllMonthlyAdminEnrollmentPercentages(currentYear);
-
-        List<String> monthsForAdmins = new ArrayList<>(monthlyAdminsEnrollments.keySet());
-        List<Long> enrollmentsForAdmins = new ArrayList<>(monthlyAdminsEnrollments.values());
-
-        String monthsForAdminsJson = mapper.writeValueAsString(monthsForAdmins);
-        System.out.println(monthsForAdminsJson);
-        String merchantsEnrollmentsForAdminsJson = mapper.writeValueAsString(enrollmentsForAdmins);
-        System.out.println(merchantsEnrollmentsForAdminsJson);
-
-
-        model.addAttribute("monthsForAdminsJson", monthsForAdminsJson);
-        model.addAttribute("merchantsEnrollmentsForAdminsJson", merchantsEnrollmentsForAdminsJson);
-
         model.addAttribute("role", pageRole);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "View Reports");
