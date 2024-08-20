@@ -1,15 +1,15 @@
 in the project run the command:npm install --save express
 --------------
 Connect to postgres,
-Complete in app.js the DB informtations:
+Complete in app.js the DB information:
 user: 'DB_USERNAME',
 host: 'DB_HOST',
 database: 'DB_DATABASE_NAME',
 password: 'DB_PASSWORD',
 port: 'DB_PORT',
 ---------------
-create the table 'users' in your db with the query command:
-CREATE TABLE users (
+create the table 'form_users' in your db with the query command:
+CREATE TABLE form_users (
     id SERIAL PRIMARY KEY,
     cui VARCHAR(50) NOT NULL,
     denumire VARCHAR(255) NOT NULL,
