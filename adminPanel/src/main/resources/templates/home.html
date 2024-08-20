@@ -9,6 +9,7 @@
     <script th:src="@{/js/home.js}"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
@@ -16,40 +17,107 @@
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <p class="welcome-message" th:if="${user.username}" th:text="'Welcome, ' + ${user.username} + '!'"></p>
-        <div class="clock-date">
-            <p class="date-label">Date:</p>
-            <p class="date">Loading...</p>
-            <p class="time-label">Time:</p>
-            <p class="time">Loading...</p>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1" th:if="${user.username}" th:text="'Welcome, ' + ${user.username} + '!'"></span>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <span class="nav-link">
+                            <span class="date-label">Date: </span>
+                            <span class="date">Loading...</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link">
+                            <span class="time-label">Time: </span>
+                            <span class="time">Loading...</span>
+                        </span>
+                    </li>
+                </ul>
+                <button class="btn btn-outline-danger" type="button"><a th:href="@{/logout}">Logout</a></button>
+            </div>
         </div>
-        <button type="button" class="btn btn-outline-light logout-button-desktop"><a th:href="@{/logout}">Logout</a></button>
-        <div class="logout-button-mobile">
-            <button type="button" class="btn btn-outline-light"><a th:href="@{/logout}">Logout</a></button>
+    </nav>
+
+    <div class="row mx-5">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a th:if="${admin}" th:href="@{/user/users(role='admin')}" target="_blank">
+                <div class="p-card">
+                    <div class="p-card-body">
+                        <h3>View Admins</h3>
+                        <div class="line"></div>
+                        <i class="arrow-down bi bi-arrow-down"></i>
+                        <div class="extra-content">
+                            <p>Manage and view all admin users.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
-    </div>
-    <div class="general-container">
-        <div class="column">
-            <a th:if="${admin}" th:href="@{/user/users(role='admin')}" class="nav-link">
-                <button class="btn">View Admins</button>
-            </a>
-            <a th:if="${admin} or ${merchant}" href="/documents/documents-list" class="nav-link">
-                <button class="btn">View Documents List</button>
-            </a>
-            <a th:if="${admin} or ${merchant}" href="/reports" class="nav-link">
-                <button class="btn">View Reports</button>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" target="_blank">
+                <div class="p-card">
+                    <div class="p-card-body">
+                        <h3>View Merchants</h3>
+                        <div class="line"></div>
+                        <i class="arrow-down bi bi-arrow-down"></i>
+                        <div class="extra-content">
+                            <p>Manage and view all merchant users.</p>
+                        </div>
+                    </div>
+                </div>
             </a>
         </div>
-        <div class="column">
-            <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" class="nav-link">
-                <button class="btn">View Merchants</button>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a th:if="${admin} or ${merchant}" href="/documents/documents-list" target="_blank">
+                <div class="p-card">
+                    <div class="p-card-body">
+                        <h3>View Documents List</h3>
+                        <div class="line"></div>
+                        <i class="arrow-down bi bi-arrow-down"></i>
+                        <div class="extra-content">
+                            <p>Access the list of uploaded documents.</p>
+                        </div>
+                    </div>
+                </div>
             </a>
-            <a th:if="${admin} or ${merchant}" href="/documents/upload-document" class="nav-link">
-                <button class="btn">Upload Documents</button>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a th:if="${admin} or ${merchant}" href="/documents/upload-document" target="_blank">
+                <div class="p-card">
+                    <div class="p-card-body">
+                        <h3>Upload Documents</h3>
+                        <div class="line"></div>
+                        <i class="arrow-down bi bi-arrow-down"></i>
+                        <div class="extra-content">
+                            <p>Upload new documents to the system.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a th:if="${admin} or ${merchant}" href="/reports" target="_blank">
+                <div class="p-card">
+                    <div class="p-card-body">
+                        <h3>View Reports</h3>
+                        <div class="line"></div>
+                        <i class="arrow-down bi bi-arrow-down"></i>
+                        <div class="extra-content">
+                            <p>View available reports.</p>
+                        </div>
+                    </div>
+                </div>
             </a>
         </div>
     </div>
 </div>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>Copyright ©2024 Vertical Digital. All rights reserved Vertical Digital SRL.</p>
+</footer>
 </body>
 </html>
