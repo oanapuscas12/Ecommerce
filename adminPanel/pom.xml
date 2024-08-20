@@ -30,6 +30,13 @@
             <version>${spring-boot.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.27</version>
+        </dependency>
+
+
         <!-- Spring Boot Starter Data JPA for working with JPA and Hibernate -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
