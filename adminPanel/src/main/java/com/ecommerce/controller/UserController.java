@@ -25,13 +25,12 @@ public class UserController {
 
     @GetMapping("/users")
     public String getUsers(
-            @RequestParam(required = false) String role,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Model model) {
 
         User currentUser = userService.getCurrentUser();
-        String pageRole = role != null ? role : "admin";
+        String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
@@ -39,10 +38,8 @@ public class UserController {
         Page<User> userPage;
         if ("admin".equalsIgnoreCase(pageRole)) {
             userPage = userService.getAllAdmins(pageable);
-        } else if ("merchant".equalsIgnoreCase(pageRole)) {
-            userPage = userService.getAllMerchants(pageable);
         } else {
-            return "redirect:/user/users?role=admin";
+            userPage = userService.getAllMerchants(pageable);
         }
 
         model.addAttribute("role", pageRole);

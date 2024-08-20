@@ -11,9 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.*;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -181,5 +181,38 @@ public class UserService {
         return allUsers.stream()
                 .filter(user -> !user.isAdmin() && !user.getId().equals(excludeUserId))
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, Long> getAllMonthlyMerchantEnrollments(int year) {
+        // Fetch all users from the repository
+        List<User> allUsers = userRepository.findAll();
+
+        // Filter out the merchant users (users who are not admins)
+        List<User> merchantUsers = allUsers.stream()
+                .filter(user -> !user.isAdmin()) // Assuming isAdmin() returns true for admin users
+                .collect(Collectors.toList());
+
+        Map<String, Long> monthlyEnrollments = new HashMap<>();
+
+        for (Month month : Month.values()) {
+            YearMonth yearMonth = YearMonth.of(year, month);
+
+            LocalDate startOfMonth = yearMonth.atDay(1);
+            LocalDate endOfMonth = yearMonth.atEndOfMonth();
+
+            LocalDateTime startOfMonthDateTime = startOfMonth.atStartOfDay();
+            LocalDateTime endOfMonthDateTime = endOfMonth.atTime(LocalTime.MAX);
+
+            long count = merchantUsers.stream()
+                    .filter(user -> {
+                        LocalDateTime userCreatedDateTime = user.getCreatedDate();
+                        return (userCreatedDateTime.isEqual(startOfMonthDateTime) || userCreatedDateTime.isAfter(startOfMonthDateTime)) &&
+                                (userCreatedDateTime.isEqual(endOfMonthDateTime) || userCreatedDateTime.isBefore(endOfMonthDateTime));
+                    })
+                    .count();
+            monthlyEnrollments.put(month.getDisplayName(TextStyle.FULL, Locale.ENGLISH), count);
+        }
+
+        return monthlyEnrollments;
     }
 }
