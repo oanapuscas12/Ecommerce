@@ -13,10 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -34,44 +36,44 @@ public class DocumentsController {
 
     @GetMapping("/documents-list")
     public String documentsList(
-            @RequestParam(value = "merchantId", required = false) Long merchantId,
+            @RequestParam(value = "merchantId", required = false) String merchantId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             Model model) {
+
         Pageable pageable = PageRequest.of(page, size);
         User currentUser = userService.getCurrentUser();
         String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
 
-        Page<User> userPage;
-        if ("admin".equalsIgnoreCase(pageRole)) {
-            userPage = userService.getAllAdmins(pageable);
-        } else {
-            userPage = userService.getAllMerchants(pageable);
-        }
+        Page<Document> documentPage;
 
         if (userService.isMerchant()) {
-            model.addAttribute("documents", documentsService.getDocumentsForCurrentMerchant(pageable));
+            documentPage = documentsService.getDocumentsForCurrentMerchant(pageable);
         } else if (userService.isAdmin()) {
-            if (merchantId != null && merchantId > 0) {
-                model.addAttribute("documents", documentsService.getDocumentsByMerchant(merchantId, pageable));
+            if (merchantId == null || merchantId.trim().isEmpty()) {
+                documentPage = documentsService.getAllDocuments(pageable);
             } else {
-                model.addAttribute("documents", documentsService.getAllDocuments(pageable));
+                Long merchantIdLong = Long.parseLong(merchantId);
+                documentPage = documentsService.getDocumentsByMerchant(merchantIdLong, pageable);
             }
             model.addAttribute("merchants", userService.getAllMerchants(PageRequest.of(0, Integer.MAX_VALUE)));
         } else {
-            return "error/403"; // Unauthorized access
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied");
         }
+
+        model.addAttribute("documents", documentPage);
         model.addAttribute("isAdmin", userService.isAdmin());
         model.addAttribute("role", pageRole);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "View Document List");
-        model.addAttribute("userPage", userPage);
+        model.addAttribute("merchantId", merchantId);
+        assert documentPage != null;
+        model.addAttribute("noDataAvailable", !documentPage.hasContent());
 
         return "documents/documents-list";
     }
-
 
     @GetMapping("/upload-document")
     public String uploadDocument(Model model) {
@@ -91,7 +93,7 @@ public class DocumentsController {
             }
             return "documents/upload-document";
         } else {
-            return "error/403";
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied");
         }
     }
 
@@ -105,7 +107,7 @@ public class DocumentsController {
         }
 
         if (!userService.isMerchant() && !userService.isAdmin()) {
-            return "error/403";
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied");
         }
 
         model.addAttribute("isAdmin", userService.isAdmin());
@@ -132,7 +134,7 @@ public class DocumentsController {
     public ResponseEntity<Resource> downloadDocument(@PathVariable("documentId") Long documentId) {
         Document document = documentsService.getDocumentById(documentId);
         if (document == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found");
         }
 
         Path filePath = Paths.get(document.getPath());
@@ -140,7 +142,7 @@ public class DocumentsController {
         try {
             fileResource = new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
         HttpHeaders headers = new HttpHeaders();

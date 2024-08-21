@@ -1,6 +1,6 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background: url('/images/home-background.jpg') no-repeat center center fixed;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
     background-size: cover;
     margin: 0;
     height: 100vh;
@@ -10,6 +10,7 @@ body {
 }
 
 .container {
+    flex: 1;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -24,22 +25,20 @@ body {
 
 .btn, [type="button"], a  {
     color: black!important;
+    background-color: transparent !important;
     border: 4px solid white;
-    padding: 20px 40px;
+    padding: 10px 20px;
     border-radius: 5px;
-    text-align: center;
     text-shadow: 0 0 6px white, 0 0 9px white;
-    flex-direction: flex-center;
-    justify-content: center;
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    width: 100%;
-    height: 150px;
-    margin-bottom: 50px;
+    width: 80%;
+    height: 120px;
+    margin-bottom: 10px;
 }
 
 .btn, [type="button"]:hover, a:hover {
-    color: black!important;
-    background-color: white;
+    color: black !important;
+    background-color: white !important;
 }
 
 .btn btn-outline-light{
@@ -52,12 +51,12 @@ body {
 }
 
 .nav-link .btn {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    text-transform: uppercase;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
 }
 
 .container_button {
@@ -78,6 +77,8 @@ button:not(:disabled) {
     width: 100%;
     top: 0;
     box-sizing: border-box;
+    background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%) !important;
+    border-bottom: 1px solid #333;
 }
 
 .welcome-message {
@@ -99,30 +100,25 @@ button:not(:disabled) {
     font-size: 16px;
 }
 
-.general-container {
-    display: flex;
-    flex-direction: row; /* Sau 'column' pentru orientare pe verticală */
-    justify-content: center; /* Centrează pe orizontală */
-    align-items: center;
-    flex-direction: row;
-    gap: 50px;
-    flex: 1;
-    margin-top: 50px;
-}
-
-.column {
-    display: flex;
-    flex-direction: column; /* Sau 'row' pentru butoane aliniate pe orizontală */
-    align-items: center; /* Centrează butoanele în interiorul coloanei */
-    gap: 20px; /* Spațiu între butoane */
-}
-
 .logout-button-desktop{
     display: block;
 }
 
 .logout-button-mobile{
     display: none;
+}
+
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    margin-top: auto;
 }
 
 @media (max-width: 768px) {
@@ -153,5 +149,103 @@ button:not(:disabled) {
             flex-direction: column;
             gap: 10px;
         }
+
+    .footer {
+            padding: 10px 0;
+            font-size: 14px;
+        }
 }
 
+.p-card {
+  width: 100%;
+  height: 200px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 4px;
+  transition: box-shadow 0.3s ease-in-out;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background: #fff;
+}
+
+@media (max-width: 1550px) {
+  .p-card {
+    height: 160px;
+    padding: 15px;
+  }
+}
+
+
+.p-card-body {
+  width: 100%;
+}
+
+.line {
+  width: 50%;
+  height: 2px;
+  background-color: #000;
+  margin: 10px auto;
+}
+
+.arrow-down {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease-in-out;
+  color: black;
+}
+
+.p-card:hover .arrow-down {
+  transform: rotate(180deg);
+}
+
+.p-card .extra-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.p-card:hover .extra-content {
+  max-height: 100px;
+  opacity: 1;
+}
+
+
+.p-card-title {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+img {
+  display: block;
+  margin: 0 auto;
+}
+
+h2 {
+  margin: 20px 0;
+  font-size: 1.5rem;
+}
+
+p {
+  margin: 5px 0;
+}
+
+
+.p-card:hover .p-card-body h3,
+.p-card:hover .p-card-body p {
+  color: #0e5ea2;
+}
+
+.p-card:hover .line {
+  background-color: #0e5ea2;
+}
+
+.p-card:hover .arrow-down {
+  color: #0e5ea2;
+}

@@ -27,7 +27,6 @@ public class Document {
     @JoinColumn(name = "user_id", nullable = false)
     private User uploadedBy;
 
-    // Define a formatter for the desired date format
     @Transient
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
