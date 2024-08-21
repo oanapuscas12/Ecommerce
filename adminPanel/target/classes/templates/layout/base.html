@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
 <head th:fragment="head">
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -19,14 +19,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item" th:if="${role == 'admin'}">
+                    <li class="nav-item" th:if="${isAdmin}">
                         <a th:href="@{/user/users/create}" class="nav-link">Create new User</a>
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/api/form-users}" class="nav-link">View Form Users</a>
                     </li>
+                    <li class="nav-item" th:if="${isAdmin}">
+                        <a th:href="@{/user/users(role='admin')}" class="nav-link" th:text="'View admins'">View Admins List</a>
+                    </li>
                     <li class="nav-item">
-                        <a th:href="@{/user/users(role=${otherRole})}" class="nav-link" th:text="'View ' + ${otherRole} + 's'">View Other Role</a>
+                        <a th:href="@{/user/users(role='merchant')}" class="nav-link" th:text="'View merchants'">View Merchants List</a>
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/reports}" class="nav-link">View Reports</a>
