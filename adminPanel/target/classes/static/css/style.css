@@ -44,6 +44,26 @@ input {
     box-sizing: border-box;
 }
 
+.button-table {
+    margin-right: 10px;
+    display: flex;
+    color: black;
+    border: 2px solid black;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    width: -webkit-fill-available;
+    place-content: center;
+}
+
+.button-table:hover {
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.7);
+    text-decoration: none;
+    color: white;
+    background: black;
+}
+
 button {
     padding: 2px 8px;
     border: none;
@@ -133,6 +153,7 @@ td, th {
 td {
   border-left: 1px solid #ECF0F1;
   border-right: 1px solid #ECF0F1;
+  display: table-cell;
 }
 
 th {

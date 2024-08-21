@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Users</title>
+    <link rel="stylesheet" th:href="@{/css/form-users.css}">
+</head>
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
 <body>
@@ -24,15 +30,26 @@
                 <th class="mobile-header">Active</th><td th:text="${user.active} ? 'Yes' : 'No'"></td>
                 <th class="mobile-header">Is Admin</th><td th:text="${user.isAdmin} ? 'Yes' : 'No'"></td>
                 <td>
-                    <a th:href="@{/user/users/{id}(id=${user.id})}" aria-label="View User">View</a>
-                    <a th:href="@{/user/users/edit/{id}(id=${user.id})}" aria-label="Edit User">Edit</a>
-                    <form th:if="${user.active}" th:action="@{/user/users/deactivate/{id}(id=${user.id})}" method="post" style="display:inline;">
-                        <button type="submit" aria-label="Deactivate User">Deactivate</button>
-                    </form>
-                    <form th:if="${!user.active}" th:action="@{/user/users/activate/{id}(id=${user.id})}" method="post" style="display:inline;">
-                        <button type="submit" aria-label="Activate User">Activate</button>
-                    </form>
+                    <div style="display: flex;">
+                        <a th:href="@{/user/users/{id}(id=${user.id})}" aria-label="View User" class="button-table">View</a>
+                        <a th:href="@{/user/users/edit/{id}(id=${user.id})}" aria-label="Edit User" class="button-table">Edit</a>
+
+                        <a th:if="${user.active}" href="#" th:href="@{/user/users/deactivate/{id}(id=${user.id})}" aria-label="Deactivate User"
+                           onclick="event.preventDefault(); document.getElementById('deactivate-form-${user.id}').submit();" class="button-table">
+                            Deactivate
+                        </a>
+                        <form th:if="${user.active}" th:id="'deactivate-form-' + ${user.id}" th:action="@{/user/users/deactivate/{id}(id=${user.id})}" method="post" style="display:none;">
+                        </form>
+
+                        <a th:if="${!user.active}" href="#" th:href="@{/user/users/activate/{id}(id=${user.id})}" aria-label="Activate User"
+                           onclick="event.preventDefault(); document.getElementById('activate-form-${user.id}').submit();" class="button-table">
+                            Activate
+                        </a>
+                        <form th:if="${!user.active}" th:id="'activate-form-' + ${user.id}" th:action="@{/user/users/activate/{id}(id=${user.id})}" method="post" style="display:none;">
+                        </form>
+                    </div>
                 </td>
+
             </tr>
             </tbody>
         </table>
