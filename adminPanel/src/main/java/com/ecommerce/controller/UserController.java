@@ -67,12 +67,13 @@ public class UserController {
     }
 
     @GetMapping("/users/create")
-    public String createUserForm(Model model) {
+    public String createUserForm(Model model, @RequestParam(required = false) String role) {
         User currentUser = userService.getCurrentUser();
         model.addAttribute("user", new User());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", "Admin");
         model.addAttribute("pageTitle", "Create new user");
+        model.addAttribute("role", role != null ? role : "admin");
         return "user/create-user";
     }
 

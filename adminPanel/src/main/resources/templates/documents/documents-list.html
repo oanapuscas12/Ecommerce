@@ -8,10 +8,9 @@
     <script th:src="@{/js/documents-list.js}"></script>
 </head>
 <head th:replace="layout/base :: head"></head>
-<body>
 <header th:replace="layout/base :: navigation"></header>
+<body>
 <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">List of Documents</h1>
-
 <main>
     <section th:fragment="content">
         <div th:if="${isAdmin}" class="filter-container">
@@ -61,8 +60,6 @@
             <a th:href="@{/documents/documents-list(page=${documents.number + 1}, size=${documents.size}, merchantId=${param.merchantId})}">Next</a>
         </span>
     </div>
-
-    <a href="#" onclick="history.back()">Back</a>
 </main>
 </body>
 </html>
