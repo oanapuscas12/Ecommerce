@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Users</title>
+</head>
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
 <body>
@@ -51,22 +56,5 @@
     </section>
     <a href="#" onclick="history.back()">Back</a>
 </main>
-<script>
-    $(window).on('resize', function() {
-  if ($(this).width() < 760) {
-    $('tr td:first-child').click(function() {
-      $(this).siblings().css({'display': 'inline-block'});
-      var $this = $(this);
-      setTimeout(function() {
-        $this.siblings().css('transform', 'translateY(0)');
-      }, 0);
-      $('tr td:first-child').not($(this)).siblings().css({'display': 'none', 'transform': 'translateY(-9999px)'});
-    });
-  } else if ($(this).width() > 760) {
-    $("tr td:first-child").unbind("click");
-    $('tr td:first-child').siblings().css({'display': '', 'transform': ''});
-  }
-}).resize();
-</script>
 </body>
 </html>
