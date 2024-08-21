@@ -58,6 +58,7 @@ public class UserController {
         Optional<User> user = userService.getUserById(id);
         User currentUser = userService.getCurrentUser();
         if (user.isPresent()) {
+            model.addAttribute("isAdmin", userService.isAdmin());
             model.addAttribute("user", user.get());
             model.addAttribute("currentUser", currentUser);
             model.addAttribute("role", role != null ? role : "admin");
@@ -75,6 +76,7 @@ public class UserController {
         String role = currentUser.isAdmin()? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
         model.addAttribute("user", new User());
+        model.addAttribute("isAdmin", userService.isAdmin());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "Create new user");
@@ -96,6 +98,7 @@ public class UserController {
         if (user.isPresent()) {
             User currentUser = userService.getCurrentUser();
             model.addAttribute("user", user.get());
+            model.addAttribute("isAdmin", userService.isAdmin());
             model.addAttribute("currentUser", currentUser);
             model.addAttribute("role", role != null ? role : "admin");
             model.addAttribute("otherRole", user.get().isAdmin() ? "Admin" : "Merchant");
