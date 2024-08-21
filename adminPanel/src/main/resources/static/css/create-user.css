@@ -1,0 +1,36 @@
+main {
+    background: none!important;
+    box-shadow: none!important;
+    width: 100%!important;
+}
+
+form {
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+
+    label {
+        width: -webkit-fill-available;
+    }
+
+    input[type="checkbox"] {
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+}
+
+.submit_button{
+    display: flex;
+    place-content: center;
+    margin: 10px;
+
+    .submit-btn{
+        padding: 10px 15px;
+    }
+}
