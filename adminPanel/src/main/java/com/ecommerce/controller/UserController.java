@@ -11,10 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -28,9 +25,8 @@ public class UserController {
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam(defaultValue = "10") int size,
                            Model model) {
-
         User currentUser = userService.getCurrentUser();
-        String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
+        boolean isAdmin= currentUser.isAdmin();
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
@@ -44,10 +40,11 @@ public class UserController {
 
         String listTitle = "admin".equalsIgnoreCase(role) ? "Admins List" : "Merchants List";
         if (role == null || role.isEmpty()) {
-            listTitle = currentUser.isAdmin() ? "Admins List" : "Merchants List";
+            listTitle = Objects.equals(role, "admin") ? "Admins List" : "Merchants List";
         }
 
-        model.addAttribute("role", pageRole);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("role", role);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", listTitle);
@@ -74,6 +71,7 @@ public class UserController {
     @GetMapping("/users/create")
     public String createUserForm(Model model) {
         User currentUser = userService.getCurrentUser();
+        boolean isAdmin = currentUser.isAdmin();
         String role = currentUser.isAdmin()? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
         model.addAttribute("user", new User());
@@ -81,6 +79,7 @@ public class UserController {
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "Create new user");
         model.addAttribute("role", role);
+        model.addAttribute("isAdmin", isAdmin);
         return "user/create-user";
     }
 

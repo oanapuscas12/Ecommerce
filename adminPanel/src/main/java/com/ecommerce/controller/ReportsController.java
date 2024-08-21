@@ -23,6 +23,7 @@ public class ReportsController {
     @GetMapping("/reports")
     public String reportsPage(Model model) throws JsonProcessingException {
         User currentUser = userService.getCurrentUser();
+        boolean isAdmin = currentUser.isAdmin();
         String role = currentUser.isAdmin()? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
 
@@ -41,6 +42,7 @@ public class ReportsController {
         model.addAttribute("monthsForMerchantsJson", monthsForMerchantsJson);
         model.addAttribute("merchantsEnrollmentsForMerchantsJson", merchantsEnrollmentsForMerchantsJson);
 
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("role", role);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
