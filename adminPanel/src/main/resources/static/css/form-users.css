@@ -1,0 +1,10 @@
+main {
+    width: 100%!important;
+    background: none!important;
+    box-shadow: none!important;
+}
+
+.container {
+    padding: 0!important;
+    background: white;
+}

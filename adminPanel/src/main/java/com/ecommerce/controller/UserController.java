@@ -24,28 +24,33 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/users")
-    public String getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            Model model) {
+    public String getUsers(@RequestParam(required = false) String role,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "10") int size,
+                           Model model) {
 
         User currentUser = userService.getCurrentUser();
         String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
-        String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
+        String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
 
         Page<User> userPage;
-        if ("admin".equalsIgnoreCase(pageRole)) {
+        if ("admin".equalsIgnoreCase(role)) {
             userPage = userService.getAllAdmins(pageable);
         } else {
             userPage = userService.getAllMerchants(pageable);
         }
 
+        String listTitle = "admin".equalsIgnoreCase(role) ? "Admins List" : "Merchants List";
+        if (role == null || role.isEmpty()) {
+            listTitle = currentUser.isAdmin() ? "Admins List" : "Merchants List";
+        }
+
         model.addAttribute("role", pageRole);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
-        model.addAttribute("pageTitle", pageRole.substring(0, 1).toUpperCase() + pageRole.substring(1) + "s List");
+        model.addAttribute("pageTitle", listTitle);
         model.addAttribute("userPage", userPage);
 
         return "user/users";
@@ -67,18 +72,20 @@ public class UserController {
     }
 
     @GetMapping("/users/create")
-    public String createUserForm(Model model, @RequestParam(required = false) String role) {
+    public String createUserForm(Model model) {
         User currentUser = userService.getCurrentUser();
+        String role = currentUser.isAdmin()? "admin" : "merchant";
+        String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
         model.addAttribute("user", new User());
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("otherRole", "Admin");
+        model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "Create new user");
-        model.addAttribute("role", role != null ? role : "admin");
+        model.addAttribute("role", role);
         return "user/create-user";
     }
 
     @PostMapping("/users")
-    public String createUser(@ModelAttribute User user, Model model) {
+    public String createUser(@ModelAttribute User user) {
         userService.createUser(user);
         String role = user.isAdmin() ? "admin" : "merchant";
         return "redirect:/user/users?role=" + role;
