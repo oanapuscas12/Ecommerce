@@ -65,7 +65,7 @@ app.post('/merchant_data', async (req, res) => {
 app.post('/check_field', async (req, res) => {
     const { field, value } = req.body;
     try {
-        const query = `SELECT 1 FROM users WHERE ${field} = $1`;
+        const query = `SELECT 1 FROM form_users WHERE ${field} = $1`;
         const result = await pool.query(query, [value]);
         res.json({ exists: result.rowCount > 0 });
     } catch (error) {
@@ -83,7 +83,7 @@ app.post('/submit_data', async (req, res) => {
         await client.query('BEGIN');
 
         const query = `
-            INSERT INTO users (cui, denumire, adresa, nr_reg_com, telefon, cod_postal, email, name, user_name)
+            INSERT INTO form_users (cui, denumire, adresa, nr_reg_com, telefon, cod_postal, email, name, user_name)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             RETURNING id`;
         const values = [cui, denumire, adresa, nr_reg_com, telefon, cod_postal, email, name, user_name];
