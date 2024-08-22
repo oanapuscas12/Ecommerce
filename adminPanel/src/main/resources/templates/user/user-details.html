@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/user-details.css}">
+</head>
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
-<main>
-    <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">Page Title</h1>
+<body>
+<h1 th:text="${pageTitle}" class="text-center w-100 mt-3">Page Title</h1>
+    <main>
     <section th:fragment="content">
         <div>
             <p>Username: <span th:text="${user.username}"></span></p>
             <p>Email: <span th:text="${user.email}"></span></p>
+            <p>Legal Business Name: </p>
+            <p>Location: </p>
+            <p>Address: </p>
+            <p>City: </p>
+            <p>Industry: </p>
+            <p>Store Launched: </p>
+            <p>Store Active: </p>
             <p>Active: <span th:text="${user.active} ? 'Yes' : 'No'"></span></p>
             <p>Is Admin: <span th:text="${user.isAdmin} ? 'Yes' : 'No'"></span></p>
             <p>Last Login Date: <span th:text="${user.lastLoginDate}"></span></p>
@@ -16,5 +28,7 @@
             <a th:href="@{/recover-password}">Reset Password</a>
         </div>
     </section>
-</main>
+        <a href="#" onclick="history.back()">Back</a>
+    </main>
+</body>
 </html>
