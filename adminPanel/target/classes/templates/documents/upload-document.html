@@ -16,7 +16,7 @@
             <div th:if="${isAdmin}">
                 <label>
                     Select Merchant:
-                    <select name="userId" required>
+                    <select name="userId" id="userId" required>
                         <option value="">Select a merchant</option>
                         <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}"></option>
                     </select>
@@ -24,11 +24,11 @@
             </div>
 
             <label>
-                Choose File:
-                <input type="file" name="file" accept=".pdf,.xml" required>
+                Select File:
+                <input type="file" name="file" id="fileInput" accept=".pdf,.xml" required>
             </label>
 
-            <button type="submit">Upload</button>
+            <button type="submit" id="submitButton" class="submit-btn" disabled>Upload</button>
         </form>
 
         <p id="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}" class="error-message"></p>
