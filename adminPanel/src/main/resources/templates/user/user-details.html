@@ -1,19 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/user-details.css}">
+    <script th:src="@{/js/user-details.js}"></script>
+    <title>Upload Documents</title>
+</head>
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
+<h1 th:text="${pageTitle}" class="text-center w-100 mt-3">Page Title</h1>
 <main>
-    <h1 th:text="${pageTitle}" class="text-center w-100 mt-3">Page Title</h1>
     <section th:fragment="content">
-        <div>
-            <p>Username: <span th:text="${user.username}"></span></p>
-            <p>Email: <span th:text="${user.email}"></span></p>
-            <p>Active: <span th:text="${user.active} ? 'Yes' : 'No'"></span></p>
-            <p>Is Admin: <span th:text="${user.isAdmin} ? 'Yes' : 'No'"></span></p>
-            <p>Last Login Date: <span th:text="${user.lastLoginDate}"></span></p>
-        </div>
-        <div th:if="${currentUser.id} == ${user.id}">
-            <a th:href="@{/recover-password}">Reset Password</a>
+        <div class="user-profile">
+            <div class="profile-row">
+                <div class="profile-label"><strong>Username:</strong></div>
+                <div class="profile-value"><span th:text="${user.username}"></span></div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label"><strong>Email:</strong></div>
+                <div class="profile-value"><span th:text="${user.email}"></span></div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label"><strong>Active:</strong></div>
+                <div class="profile-value"><span th:text="${user.active} ? 'Yes' : 'No'"></span></div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label"><strong>Is Admin:</strong></div>
+                <div class="profile-value"><span th:text="${user.isAdmin} ? 'Yes' : 'No'"></span></div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label"><strong>Last Login Date:</strong></div>
+                <div class="profile-value"><span id="lastLoginDate" th:text="${user.lastLoginDate}"></span></div>
+            </div>
+            <div class="profile-row">
+                <div class="profile-label"><strong>Reset Password:</strong></div>
+                <div class="profile-value">
+                    <button th:if="${currentUser.id} == ${user.id}"
+                            onclick="window.location.href='/recover-password';">
+                        Reset Password
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
 </main>
