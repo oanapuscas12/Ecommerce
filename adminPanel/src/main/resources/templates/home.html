@@ -43,7 +43,7 @@
 
     <div class="row mx-5">
         <div class="col-lg-4 col-md-6 mb-4">
-            <a th:if="${admin}" th:href="@{/user/users(role='admin')}" target="_blank">
+            <a th:if="${admin}" th:href="@{/user/users(role='admin')}">
                 <div class="p-card">
                     <div class="p-card-body">
                         <h3>View Admins</h3>
@@ -57,7 +57,7 @@
             </a>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
-            <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}" target="_blank">
+            <a th:if="${admin} or ${merchant}" th:href="@{/user/users(role='merchant')}">
                 <div class="p-card">
                     <div class="p-card-body">
                         <h3>View Merchants</h3>
@@ -71,7 +71,7 @@
             </a>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
-            <a th:if="${admin} or ${merchant}" href="/documents/documents-list" target="_blank">
+            <a th:if="${admin} or ${merchant}" href="/documents/documents-list">
                 <div class="p-card">
                     <div class="p-card-body">
                         <h3>View Documents List</h3>
@@ -85,7 +85,7 @@
             </a>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
-            <a th:if="${admin} or ${merchant}" href="/documents/upload-document" target="_blank">
+            <a th:if="${admin} or ${merchant}" href="/documents/upload-document">
                 <div class="p-card">
                     <div class="p-card-body">
                         <h3>Upload Documents</h3>
@@ -99,7 +99,7 @@
             </a>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
-            <a th:if="${admin} or ${merchant}" href="/reports" target="_blank">
+            <a th:if="${admin} or ${merchant}" href="/reports">
                 <div class="p-card">
                     <div class="p-card-body">
                         <h3>View Reports</h3>
