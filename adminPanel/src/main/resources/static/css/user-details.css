@@ -1,13 +1,18 @@
 main {
-    width: 80%;
-    margin: 20px auto;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    font-family: 'Lato', sans-serif;
-    color: #333;
+    display: flex;
     justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #fff;
+    margin: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 60%;
+}
+
+section {
+    padding-left: 150px;
+    width: 100%;
 }
 
 h1 {
@@ -21,10 +26,11 @@ section div p {
     font-size: 1.2rem;
     margin: 10px 0;
     color: #555;
+    text-align: left;
 }
 
 section div p span {
-    color: #9fbfbd;
+    color: black;
 }
 
 section div a {
@@ -39,7 +45,8 @@ section div a {
 }
 
 section div a:hover {
-    background-color: #0056b3;
+    color: black !important;
+    background-color: white !important;
 }
 
 
@@ -52,10 +59,13 @@ a[href="#"] {
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    position: absolute;
+    bottom: 60px;
 }
 
 a[href="#"]:hover {
-    background-color: #650aa1;
+    background-color: white;
+    color: black;
 }
 
 @media (max-width: 768px) {
