@@ -11,43 +11,26 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "merchants")
-@PrimaryKeyJoinColumn(name = "user_id")
 public class Merchant extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //de facut legatura cu users
-    @Column(name = "user_id")
-    private long user_id;
-
-    @Column(name = "email")
-    private String email;
-
     @Column(name = "name")
     private String name;
 
-    @Column(name = "user_name")
-    private String user_name;
-
-    @Column(name = "isAdmin")
-    private boolean isAdmin;
-
-    @Column(name = "isActive")
-    private boolean active;
-
     @Column(name = "cui")
-    private long cui;
+    private String cui;
 
     @Column(name = "legal_business_name")
     private String legalBusinessName;
 
     @Column(name = "phone_number")
-    private long phoneNumber;
+    private String phoneNumber;
 
     @Column(name = "nr_reg_com")
-    private long nr_reg_com;
+    private String nr_reg_com;
 
     @Column(name = "country")
     private String country;
