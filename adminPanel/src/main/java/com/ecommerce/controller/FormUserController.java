@@ -1,6 +1,6 @@
 package com.ecommerce.controller;
 
-import com.ecommerce.model.FormUser;
+import com.ecommerce.model.Merchant;
 import com.ecommerce.model.User;
 import com.ecommerce.service.FormUserService;
 import com.ecommerce.service.UserService;
@@ -25,7 +25,7 @@ public class FormUserController {
     public String getFormUsersPage(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<FormUser> userPage = formUserService.getAllFormUsers(pageable);
+        Page<Merchant> userPage = formUserService.getAllFormUsers(pageable);
         User currentUser = userService.getCurrentUser();
         String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
