@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/user-details.css}">
     <script th:src="@{/js/user-details.js}"></script>
-    <title>Upload Documents</title>
+    <title th:text="${pageTitle}">User Details</title>
 </head>
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
@@ -20,44 +20,61 @@
                 <div class="profile-label"><strong>Email:</strong></div>
                 <div class="profile-value"><span th:text="${user.email}"></span></div>
             </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>Legal Business Name:</strong></div>
-                <div class="profile-value"><span th:text="${merchant != null ? merchant.legalBusinessName : 'N/A'}"></span></div>
+
+            <div th:if="${!user.isAdmin}">
+                <div class="profile-row">
+                    <div class="profile-label"><strong>Legal Business Name:</strong></div>
+                    <div class="profile-value">
+                        <span th:text="${merchant != null ? merchant.legalBusinessName : 'No data provided yet'}"></span>
+                    </div>
+                </div>
+                <div class="profile-row">
+                    <div class="profile-label"><strong>Telephone:</strong></div>
+                    <div class="profile-value">
+                        <span th:text="${merchant != null ? merchant.phoneNumber : 'No data provided yet'}"></span>
+                    </div>
+                </div>
+                <div class="profile-row">
+                    <div class="profile-label"><strong>Country:</strong></div>
+                    <div class="profile-value">
+                        <span th:text="${merchant != null ? merchant.country : 'No data provided yet'}"></span>
+                    </div>
+                </div>
+                <div class="profile-row">
+                    <div class="profile-label"><strong>County:</strong></div>
+                    <div class="profile-value">
+                        <span th:text="${merchant != null ? merchant.county : 'No data provided yet'}"></span>
+                    </div>
+                </div>
+                <div class="profile-row">
+                    <div class="profile-label"><strong>Address:</strong></div>
+                    <div class="profile-value">
+                        <span th:text="${merchant != null ? merchant.address : 'No data provided yet'}"></span>
+                    </div>
+                </div>
+                <div class="profile-row">
+                    <div class="profile-label"><strong>City:</strong></div>
+                    <div class="profile-value">
+                        <span th:text="${merchant != null ? merchant.city : 'No data provided yet'}"></span>
+                    </div>
+                </div>
+                <div class="profile-row">
+                    <div class="profile-label"><strong>Industry:</strong></div>
+                    <div class="profile-value">
+                        <span th:text="${merchant != null ? merchant.industry : 'No data provided yet'}"></span>
+                    </div>
+                </div>
+                <div class="profile-row">
+                    <div class="profile-label"><strong>Store Launched:</strong></div>
+                    <p th:text="${merchant != null ? (merchant.storeLaunched ? 'Store is Launched' : 'Store is Not Launched') : 'No data provided yet'}"></p>
+                </div>
+                <div class="profile-row">
+                    <div class="profile-label"><strong>Store Active:</strong></div>
+                    <p th:text="${merchant != null ? (merchant.storeActive ? 'Store is Active' : 'Store is Not Active') : 'No data provided yet'}"></p>
+                </div>
             </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>Telephone:</strong></div>
-                <div class="profile-value"><span th:text="${merchant != null ? merchant.phoneNumber : 'N/A'}"></span></div>
-            </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>Country:</strong></div>
-                <div class="profile-value"><span th:text="${merchant != null ? merchant.country : 'N/A'}"></span></div>
-            </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>County:</strong></div>
-                <div class="profile-value"><span th:text="${merchant != null ? merchant.county : 'N/A'}"></span></div>
-            </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>Address:</strong></div>
-                <div class="profile-value"><span th:text="${merchant != null ? merchant.address : 'N/A'}"></span></div>
-            </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>City:</strong></div>
-                <div class="profile-value"><span th:text="${merchant != null ? merchant.city : 'N/A'}"></span></div>
-            </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>Industry:</strong></div>
-                <div class="profile-value"><span th:text="${merchant != null ? merchant.industry : 'N/A'}"></span></div>
-            </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>Store Launched:</strong></div>
-                <p th:if="${merchant != null}" th:text="${merchant.storeLaunched ? 'Store is Launched' : 'Store is Not Launched'}"></p>
-                <p th:if="${merchant == null}">Merchant data not available.</p>
-            </div>
-            <div class="profile-row">
-                <div class="profile-label"><strong>Store Active:</strong></div>
-                <p th:if="${merchant != null}" th:text="${merchant.storeLaunched ? 'Store is Launched' : 'Store is Not Launched'}"></p>
-                <p th:if="${merchant == null}">Merchant data not available.</p>
-            </div>
+
+            <!-- Common fields for all users -->
             <div class="profile-row">
                 <div class="profile-label"><strong>Active:</strong></div>
                 <div class="profile-value"><span th:text="${user.active} ? 'Yes' : 'No'"></span></div>
@@ -70,11 +87,10 @@
                 <div class="profile-label"><strong>Last Login Date:</strong></div>
                 <div class="profile-value"><span id="lastLoginDate" th:text="${user.lastLoginDate}"></span></div>
             </div>
-            <div class="profile-row">
+            <div class="profile-row" th:if="${currentUser.id} == ${user.id}">
                 <div class="profile-label"><strong>Reset Password:</strong></div>
                 <div class="profile-value">
-                    <button th:if="${currentUser.id} == ${user.id}"
-                            onclick="window.location.href='/recover-password';">
+                    <button onclick="window.location.href='/recover-password';">
                         Reset Password
                     </button>
                 </div>
