@@ -20,6 +20,12 @@
         <input type="hidden" id="chart2-first-data" th:value="${countiesJson}"/>
         <input type="hidden" id="chart2-second-data" th:value="${merchantCountsJson}"/>
         <div id="chart2" data-chart-id="chart2" data-chart-title="Merchants by County" style="height: 370px; width: 100%;"></div>
+
+        <input type="hidden" id="chart3-first-data" th:value="${activityMonthsJson}"/>
+        <input type="hidden" id="chart3-second-data-new" th:value="${newMerchantsJson}"/>
+        <input type="hidden" id="chart3-second-data-returning" th:value="${returningMerchantsJson}"/>
+        <input type="hidden" id="chart3-second-data-inactive" th:value="${inactiveMerchantsJson}"/>
+        <div id="chart3" data-chart-id="chart3" data-chart-title="New vs Returning vs Inactive Merchants" style="height: 370px; width: 100%;"></div>
     </section>
 </main>
 </body>
