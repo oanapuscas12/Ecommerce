@@ -1,6 +1,8 @@
 package com.ecommerce.service;
 
+import com.ecommerce.model.Merchant;
 import com.ecommerce.model.User;
+import com.ecommerce.repository.MerchantRepository;
 import com.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MerchantRepository merchantRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -212,5 +217,12 @@ public class UserService {
         }
 
         return monthlyEnrollments;
+    }
+
+    public Map<String, Long> getMerchantCountByCounty() {
+        List<Merchant> allMerchants = merchantRepository.findAll();
+
+        return allMerchants.stream()
+                .collect(Collectors.groupingBy(Merchant::getCounty, Collectors.counting()));
     }
 }
