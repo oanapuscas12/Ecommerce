@@ -21,7 +21,7 @@
                 <div class="profile-value"><span th:text="${user.email}"></span></div>
             </div>
 
-            <div th:if="${!user.isAdmin}">
+            <div th:if="${merchant}">
                 <div class="profile-row">
                     <div class="profile-label"><strong>Legal Business Name:</strong></div>
                     <div class="profile-value">
@@ -85,7 +85,11 @@
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Last Login Date:</strong></div>
-                <div class="profile-value"><span id="lastLoginDate" th:text="${user.lastLoginDate}"></span></div>
+                <div class="profile-value">
+                    <span id="lastLoginDate"
+                          th:text="${user.lastLoginDate != null ? user.lastLoginDate : ' '}">
+                    </span>
+                </div>
             </div>
             <div class="profile-row" th:if="${currentUser.id} == ${user.id}">
                 <div class="profile-label"><strong>Reset Password:</strong></div>

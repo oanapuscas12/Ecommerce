@@ -13,4 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const lastLoginDateElement = document.getElementById('lastLoginDate');
     const rawDate = lastLoginDateElement.textContent.trim();
     lastLoginDateElement.textContent = formatDate(rawDate);
+
+    // Get the lastLoginDate span element
+    var lastLoginDateElement = document.getElementById('lastLoginDate');
+    if (lastLoginDateElement.textContent.includes('NaN') || lastLoginDateElement.textContent.trim() === '') {
+        lastLoginDateElement.textContent = 'Not logged yet!';
+    }
 });
