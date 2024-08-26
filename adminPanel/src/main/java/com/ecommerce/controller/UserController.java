@@ -106,6 +106,8 @@ public class UserController {
     @GetMapping("/users/edit/{id}")
     public String editUserForm(@PathVariable Long id, @RequestParam(required = false) String role, Model model) {
         Optional<User> user = userService.getUserById(id);
+        Optional<Merchant> merchant = userService.getMerchantById(id);
+
         if (user.isPresent()) {
             User currentUser = userService.getCurrentUser();
             model.addAttribute("user", user.get());
@@ -114,6 +116,8 @@ public class UserController {
             model.addAttribute("role", role != null ? role : "admin");
             model.addAttribute("otherRole", user.get().isAdmin() ? "Admin" : "Merchant");
             model.addAttribute("pageTitle", "Edit User: " + user.get().getUsername());
+            merchant.ifPresent(value -> model.addAttribute("merchant", value));
+
             return "user/edit-user";
         }
         return "redirect:/user/users?role=" + (role != null ? role : "admin");

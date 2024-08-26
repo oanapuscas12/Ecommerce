@@ -1,7 +1,7 @@
 main {
-    background: none!important;
-    box-shadow: none!important;
-    width: 100%!important;
+    background: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
 }
 
 form {
@@ -11,26 +11,40 @@ form {
     border-radius: 8px;
 }
 
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    width: max-content;
+    margin-right: 10px;
+}
+
+.form-group input {
+    flex: 1;
+    padding: 5px;
+    margin: 0;
+}
+
 .checkbox-group {
     display: flex;
     align-items: center;
-
-    label {
-        width: -webkit-fill-available;
-    }
-
-    input[type="checkbox"] {
-        margin-top: 10px;
-        margin-bottom: 5px;
-    }
+    margin-bottom: 10px;
 }
 
-.submit_button{
-    display: flex;
-    place-content: center;
-    margin: 10px;
+.checkbox-group label {
+    width: auto;
+    margin-right: 10px;
+}
 
-    .submit-btn{
-        padding: 10px 15px;
-    }
+.submit_button {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.submit-btn {
+    padding: 10px 15px;
 }
