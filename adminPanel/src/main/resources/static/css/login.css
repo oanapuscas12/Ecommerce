@@ -1,3 +1,5 @@
+/* Stiluri existente */
+
 body {
     font-family: 'Roboto', sans-serif;
     background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
@@ -91,4 +93,22 @@ body {
 
 .register-link a:hover {
     text-decoration: underline;
+}
+
+/* checkbox */
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.remember-me-checkbox {
+    width: auto !important;
+    margin-right: 0.5rem;
+}
+
+.remember-me-label {
+    font-size: 0.875rem;
+    vertical-align: middle;
 }

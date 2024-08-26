@@ -38,6 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/home", true)
                 .permitAll()
                 .and()
+                .rememberMe()
+                .rememberMeParameter("rememberMe")
+                .tokenValiditySeconds(86400) // one day
+                .key("uniqueAndSecret")
+                .and()
                 .logout()
                 .permitAll()
                 .and()
