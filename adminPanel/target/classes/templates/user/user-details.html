@@ -22,30 +22,41 @@
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Legal Business Name:</strong></div>
+                <div class="profile-value"><span th:text="${merchant != null ? merchant.legalBusinessName : 'N/A'}"></span></div>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Telephone:</strong></div>
+                <div class="profile-value"><span th:text="${merchant != null ? merchant.phoneNumber : 'N/A'}"></span></div>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Country:</strong></div>
+                <div class="profile-value"><span th:text="${merchant != null ? merchant.country : 'N/A'}"></span></div>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>County:</strong></div>
+                <div class="profile-value"><span th:text="${merchant != null ? merchant.county : 'N/A'}"></span></div>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Address:</strong></div>
+                <div class="profile-value"><span th:text="${merchant != null ? merchant.address : 'N/A'}"></span></div>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>City:</strong></div>
+                <div class="profile-value"><span th:text="${merchant != null ? merchant.city : 'N/A'}"></span></div>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Industry:</strong></div>
+                <div class="profile-value"><span th:text="${merchant != null ? merchant.industry : 'N/A'}"></span></div>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Store Launched:</strong></div>
+                <p th:if="${merchant != null}" th:text="${merchant.storeLaunched ? 'Store is Launched' : 'Store is Not Launched'}"></p>
+                <p th:if="${merchant == null}">Merchant data not available.</p>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Store Active:</strong></div>
+                <p th:if="${merchant != null}" th:text="${merchant.storeLaunched ? 'Store is Launched' : 'Store is Not Launched'}"></p>
+                <p th:if="${merchant == null}">Merchant data not available.</p>
             </div>
             <div class="profile-row">
                 <div class="profile-label"><strong>Active:</strong></div>
