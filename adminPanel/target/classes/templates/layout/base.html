@@ -23,9 +23,6 @@
                     <li class="nav-item" th:if="${isAdmin}">
                         <a th:href="@{/user/users/create}" class="nav-link">Create new User</a>
                     </li>
-                    <li class="nav-item">
-                        <a th:href="@{/api/form-users}" class="nav-link">View Form Users</a>
-                    </li>
                     <li class="nav-item" th:if="${isAdmin}">
                         <a th:href="@{/user/users(role='admin')}" class="nav-link" th:text="'View admins'">View Admins List</a>
                     </li>
