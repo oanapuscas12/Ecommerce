@@ -1,0 +1,5 @@
+com/ecommerce/repository/UserRepositoryTest.class
+com/ecommerce/repository/VerificationTokenRepositoryTest.class
+com/ecommerce/service/UserServiceTest.class
+com/ecommerce/service/VerificationTokenServiceTest.class
+com/ecommerce/controller/UserControllerTest.class
