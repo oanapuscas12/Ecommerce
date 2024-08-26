@@ -24,7 +24,7 @@ public class ReportsController {
     public String reportsPage(Model model) throws JsonProcessingException {
         User currentUser = userService.getCurrentUser();
         boolean isAdmin = currentUser.isAdmin();
-        String role = currentUser.isAdmin()? "admin" : "merchant";
+        String role = isAdmin ? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
 
         int currentYear = LocalDate.now().getYear();
@@ -35,12 +35,22 @@ public class ReportsController {
         List<String> monthsForMerchants = new ArrayList<>(monthlyMerchantsEnrollments.keySet());
         List<Long> enrollmentsForMerchants = new ArrayList<>(monthlyMerchantsEnrollments.values());
 
+        // Data for Merchants by County
+        Map<String, Long> countyMerchantCount = userService.getMerchantCountByCounty();
+        List<String> counties = new ArrayList<>(countyMerchantCount.keySet());
+        List<Long> merchantCounts = new ArrayList<>(countyMerchantCount.values());
+
         ObjectMapper mapper = new ObjectMapper();
         String monthsForMerchantsJson = mapper.writeValueAsString(monthsForMerchants);
         String merchantsEnrollmentsForMerchantsJson = mapper.writeValueAsString(enrollmentsForMerchants);
+        String countiesJson = mapper.writeValueAsString(counties);
+        String merchantCountsJson = mapper.writeValueAsString(merchantCounts);
 
         model.addAttribute("monthsForMerchantsJson", monthsForMerchantsJson);
         model.addAttribute("merchantsEnrollmentsForMerchantsJson", merchantsEnrollmentsForMerchantsJson);
+
+        model.addAttribute("countiesJson", countiesJson);
+        model.addAttribute("merchantCountsJson", merchantCountsJson);
 
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("role", role);

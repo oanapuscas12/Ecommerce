@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var dataPoints = labels.map(function(label, index) {
                 return {
-                    y: parseFloat(values[index]) || 0, // Ensure values are properly parsed as floats
+                    y: parseFloat(values[index]) || 0,
                     name: label
                 };
             });
@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 data: [{
                     type: "pie",
                     showInLegend: true,
-                    toolTipContent: "{name}: <strong>{y}</strong> ", // Display the exact value
-                    indexLabel: "{name} - {y} ", // Display the exact value
+                    toolTipContent: "{name}: <strong>{y}</strong> ",
+                    indexLabel: "{name} - {y} ",
                     dataPoints: dataPoints
                 }]
             });
