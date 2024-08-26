@@ -184,12 +184,10 @@ public class UserService {
     }
 
     public Map<String, Long> getAllMonthlyMerchantEnrollments(int year) {
-        // Fetch all users from the repository
         List<User> allUsers = userRepository.findAll();
 
-        // Filter out the merchant users (users who are not admins)
         List<User> merchantUsers = allUsers.stream()
-                .filter(user -> !user.isAdmin()) // Assuming isAdmin() returns true for admin users
+                .filter(user -> !user.isAdmin())
                 .collect(Collectors.toList());
 
         Map<String, Long> monthlyEnrollments = new HashMap<>();

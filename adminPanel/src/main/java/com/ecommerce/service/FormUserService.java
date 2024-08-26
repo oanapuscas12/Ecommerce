@@ -1,6 +1,6 @@
 package com.ecommerce.service;
 
-import com.ecommerce.model.FormUser;
+import com.ecommerce.model.Merchant;
 import com.ecommerce.repository.FormUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,11 +13,11 @@ public class FormUserService {
     @Autowired
     private FormUserRepository formUserRepository;
 
-    public Page<FormUser> getAllFormUsers(Pageable pageable) {
+    public Page<Merchant> getAllFormUsers(Pageable pageable) {
         return formUserRepository.findAll(pageable);
     }
 
-    public FormUser saveFormUser(FormUser formUser) {
-        return formUserRepository.save(formUser);
+    public Merchant saveFormUser(Merchant merchant) {
+        return formUserRepository.save(merchant);
     }
 }
