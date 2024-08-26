@@ -92,3 +92,24 @@ body {
 .register-link a:hover {
     text-decoration: underline;
 }
+
+/* checkbox */
+
+.checkbox-group {
+    display: flex;
+    align-items: center; /* Centers the label vertically with the checkbox */
+    gap: 0.2rem;
+    margin-bottom: 1rem;
+}
+
+.remember-me-checkbox {
+    width: auto !important;
+    margin: 0;
+}
+
+.remember-me-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0.875rem;
+    line-height: 1;
+}
