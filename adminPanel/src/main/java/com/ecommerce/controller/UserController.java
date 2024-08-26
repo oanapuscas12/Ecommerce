@@ -1,5 +1,6 @@
 package com.ecommerce.controller;
 
+import com.ecommerce.model.Merchant;
 import com.ecommerce.model.User;
 import com.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,17 +56,27 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public String getUserById(@PathVariable Long id, @RequestParam(required = false) String role, Model model) {
-        Optional<User> user = userService.getUserById(id);
+        Optional<User> optionalUser = userService.getUserById(id);
+        Optional<Merchant> optionalMerchant = userService.getMerchantById(id);
         User currentUser = userService.getCurrentUser();
-        if (user.isPresent()) {
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
             model.addAttribute("isAdmin", userService.isAdmin());
-            model.addAttribute("user", user.get());
+            model.addAttribute("user", user);
             model.addAttribute("currentUser", currentUser);
             model.addAttribute("role", role != null ? role : "admin");
-            model.addAttribute("otherRole", user.get().isAdmin() ? "Admin" : "Merchant");
-            model.addAttribute("pageTitle", "User Details: " + user.get().getUsername());
+            model.addAttribute("otherRole", user.isAdmin() ? "Admin" : "Merchant");
+            model.addAttribute("pageTitle", "User Details: " + user.getUsername());
+
+            if (optionalMerchant.isPresent()) {
+                Merchant merchant = optionalMerchant.get();
+                model.addAttribute("merchant", merchant);
+            }
+
             return "user/user-details";
         }
+
         return "redirect:/user/users" + (role != null ? "?role=" + role : "");
     }
 

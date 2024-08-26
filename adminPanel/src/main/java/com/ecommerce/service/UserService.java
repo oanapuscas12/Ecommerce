@@ -269,4 +269,8 @@ public class UserService {
 
         return activityCounts;
     }
+
+    public Optional<Merchant> getMerchantById(Long id) {
+        return merchantRepository.findById(id);
+    }
 }
