@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -224,5 +225,48 @@ public class UserService {
 
         return allMerchants.stream()
                 .collect(Collectors.groupingBy(Merchant::getCounty, Collectors.counting()));
+    }
+
+    public Map<String, Long> getMerchantActivityForCurrentMonth() {
+        LocalDate today = LocalDate.now();
+        YearMonth currentMonth = YearMonth.from(today);
+        LocalDate startOfMonth = currentMonth.atDay(1);
+        LocalDate endOfMonth = currentMonth.atEndOfMonth();
+
+        List<Merchant> merchants = merchantRepository.findAll();
+
+        long newMerchantsCount = merchants.stream()
+                .filter(merchant -> {
+                    LocalDate createdDate = merchant.getCreatedDate().toLocalDate();
+                    return !createdDate.isBefore(startOfMonth) && !createdDate.isAfter(endOfMonth);
+                })
+                .count();
+
+        long returningMerchantsCount = merchants.stream()
+                .filter(merchant -> {
+                    LocalDateTime lastLoginDate = merchant.getLastLoginDate();
+                    LocalDate createdDate = merchant.getCreatedDate().toLocalDate();
+                    return lastLoginDate != null &&
+                            !createdDate.isAfter(startOfMonth) &&
+                            lastLoginDate.toLocalDate().isAfter(startOfMonth.minusDays(1)) &&
+                            lastLoginDate.toLocalDate().isBefore(endOfMonth.plusDays(1));
+                })
+                .count();
+
+        long inactiveMerchantsCount = merchants.stream()
+                .filter(merchant -> {
+                    LocalDateTime lastLoginDate = merchant.getLastLoginDate();
+                    return lastLoginDate == null ||
+                            lastLoginDate.toLocalDate().isBefore(startOfMonth) ||
+                            lastLoginDate.toLocalDate().isAfter(endOfMonth);
+                })
+                .count();
+
+        Map<String, Long> activityCounts = new HashMap<>();
+        activityCounts.put("New", newMerchantsCount);
+        activityCounts.put("Returning", returningMerchantsCount);
+        activityCounts.put("Inactive", inactiveMerchantsCount);
+
+        return activityCounts;
     }
 }
