@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documents List</title>
     <link rel="stylesheet" th:href="@{/css/documents-list.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <script th:src="@{/js/documents-list.js}"></script>
 </head>
 <head th:replace="layout/base :: head"></head>
@@ -15,7 +16,9 @@
     <section th:fragment="content">
         <div th:if="${isAdmin}" class="filter-container">
             <form action="#" th:action="@{/documents/documents-list}" method="get" class="filter-form">
-                <label for="merchantId">Filter by Merchant:</label>
+                <label for="merchantId">
+                    <i class="bi bi-funnel-fill"></i>
+                </label>
                 <select name="merchantId" id="merchantId">
                     <option value="" th:selected="${merchantId == null || merchantId == ''}">All Merchants</option>
                     <option th:each="merchant : ${merchants}"
