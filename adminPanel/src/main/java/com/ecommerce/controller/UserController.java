@@ -81,19 +81,35 @@ public class UserController {
     }
 
     @GetMapping("/users/create")
-    public String createUserForm(Model model) {
+    public String createUserForm(@RequestParam(value = "username", required = false) String username,
+                                 @RequestParam(value = "email", required = false) String email,
+                                 Model model) {
         User currentUser = userService.getCurrentUser();
         boolean isAdmin = currentUser.isAdmin();
-        String role = currentUser.isAdmin()? "admin" : "merchant";
+        String role = isAdmin ? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
+
         model.addAttribute("user", new User());
-        model.addAttribute("isAdmin", userService.isAdmin());
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "Create new user");
         model.addAttribute("role", role);
-        model.addAttribute("isAdmin", isAdmin);
+
         return "user/create-user";
+    }
+
+    @GetMapping("/users/validateUsername")
+    @ResponseBody
+    public boolean validateUsername(@RequestParam("username") String username) {
+        return userService.existsByUsername(username);
+    }
+
+    // New AJAX endpoint for email validation
+    @GetMapping("/users/validateEmail")
+    @ResponseBody
+    public boolean validateEmail(@RequestParam("email") String email) {
+        return userService.existsByEmail(email);
     }
 
     @PostMapping("/users")

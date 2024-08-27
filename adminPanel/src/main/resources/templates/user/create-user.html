@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create new User</title>
     <link rel="stylesheet" th:href="@{/css/create-user.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/create-user.js}"></script>
 </head>
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
@@ -18,6 +20,7 @@
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="username" required>
                 </div>
+                <div id="username-error" class="error-message"></div>
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" required>
@@ -26,6 +29,7 @@
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
                 </div>
+                <div id="email-error" class="error-message"></div>
                 <div class="form-group checkbox-group">
                     <label class="label-checkbox-group" for="admin">Is Admin:</label>
                     <input type="checkbox" id="admin" name="admin">
@@ -35,7 +39,7 @@
                     <input type="checkbox" id="active" name="active" checked>
                 </div>
                 <div class="submit_button">
-                    <button type="submit" class="submit-btn">Create</button>
+                    <button type="submit" class="submit-btn" disabled>Create</button> <!-- Button initially disabled -->
                 </div>
             </form>
         </div>

@@ -52,11 +52,26 @@ public class UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists.");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         String token = generateToken();
         user.setToken(token);
-        User savedUser = userRepository.save(user);
+
+        User savedUser;
+        if (user.isAdmin()) {
+            savedUser = userRepository.save(user);
+        } else {
+            Merchant merchant = new Merchant();
+            merchant.setUsername(user.getUsername());
+            merchant.setPassword(encodedPassword);
+            merchant.setEmail(user.getEmail());
+            merchant.setToken(token);
+            merchant.setName(user.getUsername());
+            merchant.setStoreLaunched(false);
+            merchant.setStoreActive(false);
+            savedUser = merchantRepository.save(merchant);
+        }
 
         String confirmationLink = domain + "/confirm-account?token=" + token;
         String subject = "Confirm Your Account";
@@ -224,6 +239,7 @@ public class UserService {
         List<Merchant> allMerchants = merchantRepository.findAll();
 
         return allMerchants.stream()
+                .filter(merchant -> merchant.getCounty() != null)
                 .collect(Collectors.groupingBy(Merchant::getCounty, Collectors.counting()));
     }
 
