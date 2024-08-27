@@ -122,6 +122,14 @@ button:not(:disabled) {
 }
 
 @media (max-width: 768px) {
+    .container {
+        height: max-content;
+    }
+
+    .row.mx-5{
+        padding-top: 90%;
+    }
+
     button:not(:disabled) {
         cursor: pointer;
         width: 66%;
