@@ -48,3 +48,10 @@ form {
 .submit-btn {
     padding: 10px 15px;
 }
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}

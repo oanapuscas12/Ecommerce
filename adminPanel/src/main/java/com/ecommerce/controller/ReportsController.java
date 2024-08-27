@@ -28,7 +28,10 @@ public class ReportsController {
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
 
         // Data for Enrollment Merchants for the Current Month
-        Map<String, Long> monthlyMerchantsEnrollments = userService.getMerchantActivityForCurrentMonth();
+        int currentYear = LocalDate.now().getYear();
+
+        //Fetch monthly merchant enrollments for the current year
+        Map<String, Long> monthlyMerchantsEnrollments = userService.getAllMonthlyMerchantEnrollments(currentYear);
 
         List<String> monthsForMerchants = new ArrayList<>(monthlyMerchantsEnrollments.keySet());
         List<Long> enrollmentsForMerchants = new ArrayList<>(monthlyMerchantsEnrollments.values());
