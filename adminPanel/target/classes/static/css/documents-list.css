@@ -1,40 +1,49 @@
 .filter-container {
-    margin: 20px 0;
+    margin: 10px 0 0px 0;
     display: flex;
     justify-content: flex-start;
 }
 
 .filter-form {
     background: #9fbfbd;
-    padding: 6px;
-    border-radius: 3px;
+    padding: 4px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     border: 1px solid #ddd;
+    margin-bottom: 30px;
 }
 
 .filter-form label {
-    background: #9fbfbd;
+    display: flex;
+    align-items: center;
     font-weight: bold;
+    font-size: 16px;
+    margin-left: auto;
+}
+
+.filter-form i.bi-funnel-fill {
+    font-size: 18px;
+    margin-right: 8px;
 }
 
 .filter-form select {
-    padding: 8px;
+    padding: 6px;
     margin-right: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 14px;
 }
 
 .filter-form button {
-    padding: 4px 8px;
+    padding: 2px 6px;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     background-color: #007bff;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .filter-form button:hover {
