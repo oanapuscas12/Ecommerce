@@ -123,8 +123,8 @@ public class UserService {
         return userRepository.findByIsAdmin(true, pageable);
     }
 
-    public Page<User> getAllMerchants(Pageable pageable) {
-        return userRepository.findByIsAdmin(false, pageable);
+    public Page<Merchant> getAllMerchants(Pageable pageable) {
+        return merchantRepository.findAll(pageable);
     }
 
     public void updateUser(Long id, User updatedUser) {

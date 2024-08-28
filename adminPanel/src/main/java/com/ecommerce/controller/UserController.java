@@ -32,11 +32,17 @@ public class UserController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
 
-        Page<User> userPage;
+
+
         if ("admin".equalsIgnoreCase(role)) {
+            Page<User> userPage;
             userPage = userService.getAllAdmins(pageable);
+            model.addAttribute("userPage", userPage);
         } else {
+            Page<Merchant> userPage;
             userPage = userService.getAllMerchants(pageable);
+            model.addAttribute("userPage", userPage);
+            model.addAttribute("merchant", "merchant");
         }
 
         String listTitle = "admin".equalsIgnoreCase(role) ? "Admins List" : "Merchants List";
@@ -49,7 +55,6 @@ public class UserController {
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", listTitle);
-        model.addAttribute("userPage", userPage);
 
         return "user/users";
     }
