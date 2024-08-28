@@ -60,8 +60,8 @@ input {
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
     border-color: rgba(0, 0, 0, 0.7);
     text-decoration: none;
-    color: white;
-    background: black;
+    color: white!important;
+    background: black!important;
 }
 
 button {
@@ -74,10 +74,6 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #218838;
-}
-
 p {
     text-align: center;
 }
@@ -87,10 +83,6 @@ a {
     text-decoration: none;
     width: max-content;
     display: contents;
-}
-
-a:hover {
-    text-decoration: underline;
 }
 
 .alert {
@@ -181,43 +173,6 @@ tr:nth-of-type(even) td {
   p {
     display: block;
     font-weight: bold;
-  }
-
-  table tr td:not(:first-child), table tr th:not(:first-child), table tr td:not(.total-val) {
-    display: none;
-  }
-
-  table tr td:first-child {
-    display: block;
-    cursor: pointer;
-  }
-
-  table tr th:first-child {
-    width: 100%;
-    display: block;
-  }
-
-  table tr td.total-val {
-    display: inline-block;
-    transform: translateY(0);
-    width: 75%;
-  }
-}
-
-thead th:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
-
-thead th:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
-@media only screen and (max-width: 300px) {
-  table tr th:not(:first-child), table tr td:not(:first-child) {
-    width: 50%;
-    font-size: 14px;
   }
 }
 
