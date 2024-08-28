@@ -4,3 +4,9 @@ button {
     border-radius: 0!important;
     background-color: unset!important;
 }
+
+@media only screen and (max-width: 768px) {
+  .button-table {
+      padding: 5px 15px;
+  }
+}
