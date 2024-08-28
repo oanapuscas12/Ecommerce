@@ -123,8 +123,37 @@
                 </div>
             </a>
         </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a th:if="${admin} or ${merchant}" href="/documents/upload-document">
+                <div class="p-card">
+                    <div class="p-card-body">
+                        <h3>Upload Documents</h3>
+                        <div class="line"></div>
+                        <i class="arrow-down bi bi-arrow-down"></i>
+                        <div class="extra-content">
+                            <p>Upload new documents to the system.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <a th:if="${admin} or ${merchant}" href="/reports">
+                <div class="p-card">
+                    <div class="p-card-body">
+                        <h3>View Reports</h3>
+                        <div class="line"></div>
+                        <i class="arrow-down bi bi-arrow-down"></i>
+                        <div class="extra-content">
+                            <p>View available reports.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+
 
 <!-- Footer -->
 <footer class="footer">
