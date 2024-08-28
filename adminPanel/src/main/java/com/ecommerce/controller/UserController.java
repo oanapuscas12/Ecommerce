@@ -105,7 +105,6 @@ public class UserController {
         return userService.existsByUsername(username);
     }
 
-    // New AJAX endpoint for email validation
     @GetMapping("/users/validateEmail")
     @ResponseBody
     public boolean validateEmail(@RequestParam("email") String email) {
