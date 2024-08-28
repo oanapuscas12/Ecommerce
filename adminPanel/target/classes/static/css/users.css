@@ -1,23 +1,6 @@
-main {
-    width: 100%!important;
-    background: none!important;
-    box-shadow: none!important;
-}
-
-.container {
-    padding: 0!important;
-    background: white;
-}
-
-form {
-    background: none!important;
-    box-shadow: none!important;
-}
-
 button {
     padding: 0!important;
     border: none!important;
     border-radius: 0!important;
     background-color: unset!important;
-    color: black!important;
 }
