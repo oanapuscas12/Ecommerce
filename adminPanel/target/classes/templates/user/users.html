@@ -20,6 +20,7 @@
                 <th>Email</th>
                 <th>Active</th>
                 <th>Is Admin</th>
+                <th th:if="${merchant}">Legal Business Name</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -29,6 +30,7 @@
                 <th class="mobile-header">Email</th><td th:text="${user.email}"></td>
                 <th class="mobile-header">Active</th><td th:text="${user.active} ? 'Yes' : 'No'"></td>
                 <th class="mobile-header">Is Admin</th><td th:text="${user.isAdmin} ? 'Yes' : 'No'"></td>
+                <th th:if="${!isAdmin}" class="mobile-header">Legal Business Name</th><td th:if="${!user.isAdmin}" th:text="${user.legalBusinessName != null ? user.legalBusinessName : 'No data provided yet'}"></td>
                 <td>
                     <div style="display: flex;">
                         <a th:href="@{/user/users/{id}(id=${user.id})}" aria-label="View User" class="button-table">View</a>
@@ -41,7 +43,6 @@
                         </form>
                     </div>
                 </td>
-
             </tr>
             </tbody>
         </table>
