@@ -16,6 +16,9 @@ body {
     height: 100%;
     z-index: -1;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .container {
@@ -26,6 +29,9 @@ body {
     color: black;
     z-index: 1;
     padding: 100px 20px 20px 20px;
+    border-radius: 0;
+    box-shadow: none;
+    border: 0;
 }
 
 .header {

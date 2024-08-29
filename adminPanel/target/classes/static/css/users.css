@@ -20,11 +20,30 @@ table {
     box-sizing: border-box!important;
 }
 
+.filter-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-container input,
+.filter-container select {
+    margin-top: 2px;
+}
+
+.form-control.form-control-sm{
+    margin:0!important;
+}
+
 .btn-secondary{
    color: black!important;
 }
 @media only screen and (max-width: 768px) {
   .button-table {
       padding: 5px 15px;
+  }
+
+  .filter-container {
+      display: flow;
   }
 }
