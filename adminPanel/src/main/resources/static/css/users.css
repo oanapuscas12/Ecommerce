@@ -9,6 +9,18 @@ table {
    margin: 0!important;
 }
 
+.table thead th {
+    position: relative!important;
+    vertical-align: baseline!important;
+}
+
+.table thead th input,
+.table thead th select {
+    width: max-content!important;
+    box-sizing: border-box!important;
+}
+
+
 @media only screen and (max-width: 768px) {
   .button-table {
       padding: 5px 15px;
