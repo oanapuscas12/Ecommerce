@@ -20,7 +20,9 @@ table {
     box-sizing: border-box!important;
 }
 
-
+.btn-secondary{
+   color: black!important;
+}
 @media only screen and (max-width: 768px) {
   .button-table {
       padding: 5px 15px;
