@@ -37,18 +37,18 @@
                         <div style="display: flex;">
 
                             <a th:href="@{/user/users/{id}(id=${user.id})}" aria-label="View User" class="button-table">
-                                <button type="button" class="btn btn-outline-secondary">View</button>
+                                <button type="button" class="btn btn-secondary">View</button>
                             </a>
                             <a th:href="@{/user/users/edit/{id}(id=${user.id})}" aria-label="Edit User" class="button-table">
-                                <button type="button" class="btn btn-outline-secondary">Edit</button>
+                                <button type="button" class="btn btn-secondary">Edit</button>
                             </a>
                             <a th:if="${user.active}" th:action="@{/user/users/deactivate/{id}(id=${user.id})}"
                                methods="post" class="button-table">
-                                <button class="btn btn-outline-secondary" type="submit" aria-label="Deactivate User">Deactivate</button>
+                                <button class="btn btn-secondary" type="submit" aria-label="Deactivate User">Deactivate</button>
                             </a>
                             <a th:if="${!user.active}" th:action="@{/user/users/activate/{id}(id=${user.id})}"
                                methods="post" class="button-table">
-                                <button class="btn btn-outline-secondary" type="submit" aria-label="Activate User">Activate</button>
+                                <button class="btn btn-secondary" type="submit" aria-label="Activate User">Activate</button>
                             </a>
                         </div>
                     </td>
