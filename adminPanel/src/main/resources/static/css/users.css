@@ -5,6 +5,10 @@ button {
     background-color: unset!important;
 }
 
+table {
+   margin: 0!important;
+}
+
 @media only screen and (max-width: 768px) {
   .button-table {
       padding: 5px 15px;
