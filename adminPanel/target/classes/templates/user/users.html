@@ -18,23 +18,41 @@
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>Username
-                        <label for="filterUsername"></label><input type="text" id="filterUsername" class="form-control form-control-sm mt-2" placeholder="Search by username">
+                    <th>
+                        <div class="filter-container">
+                            Username
+                            <label for="filterUsername"></label>
+                            <input type="text" id="filterUsername" class="form-control form-control-sm" placeholder="Search by username">
+                        </div>
                     </th>
-                    <th>Email
-                        <label for="filterEmail"></label><input type="text" id="filterEmail" class="form-control form-control-sm mt-2" placeholder="Search by email">
+                    <th>
+                        <div class="filter-container">
+                            Email
+                            <label for="filterEmail"></label>
+                            <input type="text" id="filterEmail" class="form-control form-control-sm" placeholder="Search by email">
+                        </div>
                     </th>
-                    <th>Active
-                        <label for="filterIsActive"></label><select id="filterIsActive" class="form-control form-control-sm mt-2">
-                            <option value="">Select Active Status</option>
-                            <option value="Yes">Active</option>
-                            <option value="No">Inactive</option>
-                        </select>
+                    <th>
+                        <div class="filter-container">
+                            Active
+                            <label for="filterIsActive"></label>
+                            <select id="filterIsActive" class="form-control form-control-sm">
+                                <option value="">Select Active Status</option>
+                                <option value="Yes">Active</option>
+                                <option value="No">Inactive</option>
+                            </select>
+                        </div>
                     </th>
-                    <th th:if="${merchant}">Legal Business Name
-                        <label for="filterLegalBusinessName"></label><input type="text" id="filterLegalBusinessName" class="form-control form-control-sm mt-2" placeholder="Search by Legal Business Name">
+                    <th th:if="${merchant}">
+                        <div class="filter-container">
+                            Legal Business Name
+                            <label for="filterLegalBusinessName"></label>
+                            <input type="text" id="filterLegalBusinessName" class="form-control form-control-sm" placeholder="Search by Legal Business Name">
+                        </div>
                     </th>
-                    <th style="text-align: -webkit-center!important; align-content: center!important;">Actions</th>
+                    <th style="text-align: -webkit-center!important; align-content: center!important;">
+                        Actions
+                    </th>
                 </tr>
                 </thead>
                 <tbody id="tableBody">
