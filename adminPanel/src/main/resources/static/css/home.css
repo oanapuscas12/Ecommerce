@@ -25,7 +25,7 @@ body {
     justify-content: center;
     color: black;
     z-index: 1;
-    padding: 100px 20px 20px 20px; /* Ajustat padding-ul pentru a evita suprapunerea cu navbarul */
+    padding: 100px 20px 20px 20px;
 }
 
 .header {
@@ -78,7 +78,7 @@ body {
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     background: #fff;
-    color: #000; /* Setează textul la negru */
+    color: #000;
 }
 
 .p-card:hover {
@@ -105,7 +105,7 @@ body {
 
 .p-card:hover .arrow-down {
     transform: rotate(180deg);
-    color: rgba(70, 160, 167, 0.7); /* Schimbă săgeata la cyan la hover */
+    color: rgba(70, 160, 167, 0.7);
 }
 
 .p-card .extra-content {
@@ -142,11 +142,11 @@ p {
 
 .p-card:hover .p-card-body h3,
 .p-card:hover .p-card-body p {
-    color: rgba(70, 160, 167, 0.7); /* Schimbă textul la cyan la hover */
+    color: rgba(70, 160, 167, 0.7);
 }
 
 .p-card:hover .line {
-    background-color: rgba(70, 160, 167, 0.7); /*cyan*/
+    background-color: rgba(70, 160, 167, 0.7);
 }
 
 @media (max-width: 768px) {
