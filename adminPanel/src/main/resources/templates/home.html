@@ -81,8 +81,8 @@
     </nav>
 
     <div class="row mx-5">
-        <div class="col-lg-4 col-md-6 mb-4">
-            <a th:if="${admin}" th:href="@{/user/users(role='admin')}">
+        <div class="col-lg-4 col-md-6 mb-4" th:if="${admin}">
+            <a th:href="@{/user/users(role='admin')}">
                 <div class="p-card">
                     <div class="p-card-body">
                         <h3>View Admins</h3>
