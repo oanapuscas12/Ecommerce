@@ -21,8 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("/documents")
@@ -134,13 +136,20 @@ public class DocumentsController {
     public ResponseEntity<Resource> downloadDocument(@PathVariable("documentId") Long documentId) {
         Document document = documentsService.getDocumentById(documentId);
         if (document == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Path filePath = Paths.get(document.getPath());
+        if (!Files.exists(filePath)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
         Resource fileResource;
         try {
             fileResource = new UrlResource(filePath.toUri());
+            if (!fileResource.exists() || !fileResource.isReadable()) {
+                throw new RuntimeException("File not found or not readable");
+            }
         } catch (MalformedURLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -152,5 +161,29 @@ public class DocumentsController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(fileResource);
+    }
+
+    @GetMapping("/preview/{documentId}")
+    public ResponseEntity<byte[]> previewDocument(@PathVariable("documentId") Long documentId) {
+        Document document = documentsService.getDocumentById(documentId);
+        if (document == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found");
+        }
+
+        byte[] content = document.getContent();
+        if (content == null || content.length == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document content is empty");
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        String contentType = document.getContentType();
+        if (contentType == null || contentType.isEmpty()) {
+            contentType = "application/octet-stream";
+        }
+        headers.setContentType(MediaType.parseMediaType(contentType));
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(content);
     }
 }
