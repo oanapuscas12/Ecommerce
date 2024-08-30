@@ -33,7 +33,6 @@ public class DocumentsService {
 
     public DocumentsService() {
         try {
-            // Ensure the root directory exists
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize storage", e);
@@ -58,12 +57,19 @@ public class DocumentsService {
             throw new IOException("Cannot store file outside current directory.");
         }
 
+        byte[] content = file.getBytes();
+
         try (var inputStream = file.getInputStream()) {
             Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
         }
 
+        String contentType = file.getContentType();
+        if (contentType == null || contentType.isEmpty()) {
+            contentType = Document.getMimeType(filename);
+        }
+
         Document document = documentRepository.findByNameAndUploadedById(filename, userId)
-                .orElse(new Document(filename, destinationFile.toString(), user, LocalDateTime.now()));
+                .orElse(new Document(filename, destinationFile.toString(), user, LocalDateTime.now(), contentType, content));
 
         documentRepository.save(document);
     }
