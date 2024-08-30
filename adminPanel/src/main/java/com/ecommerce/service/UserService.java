@@ -12,9 +12,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.*;
-import java.time.chrono.ChronoLocalDate;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,15 +38,21 @@ public class UserService {
     @Value("${domain}")
     private String domain;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     public List<User> getAllUsers() {
+        logger.info("Fetching all users");
         return userRepository.findAll();
     }
 
     public Optional<User> getUserById(Long id) {
+        logger.info("Fetching user by ID: {}", id);
         return userRepository.findById(id);
     }
 
     public User createUser(User user) {
+        logger.info("Creating user with username: {}", user.getUsername());
+
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists.");
         }
@@ -61,6 +68,7 @@ public class UserService {
         User savedUser;
         if (user.isAdmin()) {
             savedUser = userRepository.save(user);
+            logger.info("Admin user created with ID: {}", savedUser.getId());
         } else {
             Merchant merchant = new Merchant();
             merchant.setUsername(user.getUsername());
@@ -71,12 +79,15 @@ public class UserService {
             merchant.setStoreLaunched(false);
             merchant.setStoreActive(false);
             savedUser = merchantRepository.save(merchant);
+            logger.info("Merchant created with ID: {}", savedUser.getId());
         }
 
         String confirmationLink = domain + "/confirm-account?token=" + token;
         String subject = "Confirm Your Account";
         String body = "Hello " + user.getUsername() + ",\n\nPlease confirm your account by clicking the link below:\n" + confirmationLink + "\n\nBest regards,\nThe Team";
-//        emailSenderService.sendEmail(user.getEmail(), subject, body);
+        // Uncomment to send email!! --->
+        // emailSenderService.sendEmail(user.getEmail(), subject, body);
+        logger.info("Confirmation email prepared for user: {}", user.getUsername());
 
         return savedUser;
     }
@@ -88,8 +99,10 @@ public class UserService {
             user.setActive(true);
             user.setToken(null);
             userRepository.save(user);
+            logger.info("User account confirmed for username: {}", user.getUsername());
             return true;
         }
+        logger.warn("Invalid token provided for account confirmation: {}", token);
         return false;
     }
 
@@ -99,6 +112,9 @@ public class UserService {
             User existingUser = user.get();
             existingUser.setActive(false);
             userRepository.save(existingUser);
+            logger.info("User deactivated: {}", existingUser.getUsername());
+        } else {
+            logger.warn("User not found for deactivation with ID: {}", id);
         }
     }
 
@@ -108,6 +124,9 @@ public class UserService {
             User existingUser = user.get();
             existingUser.setActive(true);
             userRepository.save(existingUser);
+            logger.info("User activated: {}", existingUser.getUsername());
+        } else {
+            logger.warn("User not found for activation with ID: {}", id);
         }
     }
 
@@ -140,6 +159,7 @@ public class UserService {
     }
 
     public boolean initiatePasswordRecover(String email) {
+        logger.info("Initiating password recovery for email: {}", email);
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -150,9 +170,12 @@ public class UserService {
             String resetLink = domain + "/reset-password?token=" + token;
             String body = "To reset your password, click the link below:\n" + resetLink;
 
-//            emailSenderService.sendEmail(email, "Password Reset Request", body);
+            // emailSenderService.sendEmail(email, "Password Reset Request", body);
+            logger.info("Password recovery email prepared for user: {}", user.getUsername());
+
             return true;
         }
+        logger.warn("Email not found for password recovery: {}", email);
         return false;
     }
 
@@ -161,14 +184,17 @@ public class UserService {
     }
 
     public boolean resetPassword(String token, String newPassword) {
+        logger.info("Resetting password for token: {}", token);
         Optional<User> userOptional = userRepository.findByToken(token);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setPassword(passwordEncoder.encode(newPassword));
             user.setToken(null);
             userRepository.save(user);
+            logger.info("Password reset successfully for user: {}", user.getUsername());
             return true;
         }
+        logger.warn("Invalid token provided for password reset: {}", token);
         return false;
     }
 
@@ -180,8 +206,10 @@ public class UserService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             String username = ((UserDetails) principal).getUsername();
+            logger.info("Fetching current user: {}", username);
             return userRepository.findByUsername(username).orElse(null);
         } else {
+            logger.warn("No authenticated user found in the security context");
             return null;
         }
     }
