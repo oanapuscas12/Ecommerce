@@ -19,12 +19,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("/documents")
@@ -36,9 +36,6 @@ public class DocumentsController {
     @Autowired
     private UserService userService;
 
-    private static final Logger logger = LoggerFactory.getLogger(DocumentsController.class);
-
-
     @GetMapping("/documents-list")
     public String documentsList(
             @RequestParam(value = "merchantId", required = false) String merchantId,
@@ -46,38 +43,25 @@ public class DocumentsController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             Model model) {
 
-        logger.info("Fetching documents list - page: {}, size: {}, merchantId: {}", page, size, merchantId);
-
         Pageable pageable = PageRequest.of(page, size);
         User currentUser = userService.getCurrentUser();
-        logger.debug("Current user: {}", currentUser.getUsername());
-
         String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
 
         Page<Document> documentPage;
 
-        try {
-            if (userService.isMerchant()) {
-                documentPage = documentsService.getDocumentsForCurrentMerchant(pageable);
-                logger.debug("Fetched documents for merchant");
-            } else if (userService.isAdmin()) {
-                if (merchantId == null || merchantId.trim().isEmpty()) {
-                    documentPage = documentsService.getAllDocuments(pageable);
-                    logger.debug("Fetched all documents for admin");
-                } else {
-                    Long merchantIdLong = Long.parseLong(merchantId);
-                    documentPage = documentsService.getDocumentsByMerchant(merchantIdLong, pageable);
-                    logger.debug("Fetched documents for merchant ID: {}", merchantIdLong);
-                }
-                model.addAttribute("merchants", userService.getAllMerchants(PageRequest.of(0, Integer.MAX_VALUE)));
+        if (userService.isMerchant()) {
+            documentPage = documentsService.getDocumentsForCurrentMerchant(pageable);
+        } else if (userService.isAdmin()) {
+            if (merchantId == null || merchantId.trim().isEmpty()) {
+                documentPage = documentsService.getAllDocuments(pageable);
             } else {
-                logger.warn("Access denied for user: {}", currentUser.getUsername());
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied");
+                Long merchantIdLong = Long.parseLong(merchantId);
+                documentPage = documentsService.getDocumentsByMerchant(merchantIdLong, pageable);
             }
-        } catch (Exception e) {
-            logger.error("Error fetching documents list", e);
-            throw e;
+            model.addAttribute("merchants", userService.getAllMerchants(PageRequest.of(0, Integer.MAX_VALUE)));
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied");
         }
 
         model.addAttribute("documents", documentPage);
@@ -87,17 +71,15 @@ public class DocumentsController {
         model.addAttribute("otherRole", otherRole);
         model.addAttribute("pageTitle", "View Document List");
         model.addAttribute("merchantId", merchantId);
+        assert documentPage != null;
         model.addAttribute("noDataAvailable", !documentPage.hasContent());
 
-        logger.info("Documents list fetched successfully for user: {}", currentUser.getUsername());
         return "documents/documents-list";
     }
 
     @GetMapping("/upload-document")
     public String uploadDocument(Model model) {
         User currentUser = userService.getCurrentUser();
-        logger.info("Navigating to upload document page for user: {}", currentUser.getUsername());
-
         String pageRole = currentUser.isAdmin() ? "admin" : "merchant";
         String otherRole = "admin".equalsIgnoreCase(pageRole) ? "merchant" : "admin";
 
@@ -113,7 +95,6 @@ public class DocumentsController {
             }
             return "documents/upload-document";
         } else {
-            logger.warn("Access denied for user: {}", currentUser.getUsername());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied");
         }
     }
@@ -123,14 +104,11 @@ public class DocumentsController {
                                    @RequestParam(value = "userId", required = false) Long userId,
                                    Model model) {
         User currentUser = userService.getCurrentUser();
-        logger.info("Handling file upload for user: {}", currentUser.getUsername());
-
         if (currentUser != null) {
             model.addAttribute("currentUser", currentUser);
         }
 
         if (!userService.isMerchant() && !userService.isAdmin()) {
-            logger.warn("Access denied for file upload by user: {}", currentUser.getUsername());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied");
         }
 
@@ -141,18 +119,13 @@ public class DocumentsController {
 
         try {
             Long actualUserId = userId != null ? userId : userService.getCurrentUser().getId();
-            logger.debug("Checking if document already exists for user ID: {}", actualUserId);
-
             if (documentsService.isDocumentAlreadyExists(actualUserId, file.getOriginalFilename())) {
-                logger.warn("Document already exists: {}", file.getOriginalFilename());
                 model.addAttribute("errorMessage", "A document with the same name already exists.");
             } else {
                 documentsService.saveDocument(file, actualUserId);
-                logger.info("Document uploaded successfully: {}", file.getOriginalFilename());
                 model.addAttribute("successMessage", "Document uploaded successfully");
             }
         } catch (Exception e) {
-            logger.error("Failed to upload document", e);
             model.addAttribute("errorMessage", "Failed to upload document: " + e.getMessage());
         }
 
@@ -161,21 +134,23 @@ public class DocumentsController {
 
     @GetMapping("/download/{documentId}")
     public ResponseEntity<Resource> downloadDocument(@PathVariable("documentId") Long documentId) {
-        logger.info("Downloading document with ID: {}", documentId);
-
         Document document = documentsService.getDocumentById(documentId);
         if (document == null) {
-            logger.error("Document not found with ID: {}", documentId);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Path filePath = Paths.get(document.getPath());
+        if (!Files.exists(filePath)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
         Resource fileResource;
         try {
             fileResource = new UrlResource(filePath.toUri());
-            logger.info("Document found and ready for download: {}", document.getName());
+            if (!fileResource.exists() || !fileResource.isReadable()) {
+                throw new RuntimeException("File not found or not readable");
+            }
         } catch (MalformedURLException e) {
-            logger.error("Malformed URL for document path: {}", filePath, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -186,5 +161,29 @@ public class DocumentsController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(fileResource);
+    }
+
+    @GetMapping("/preview/{documentId}")
+    public ResponseEntity<byte[]> previewDocument(@PathVariable("documentId") Long documentId) {
+        Document document = documentsService.getDocumentById(documentId);
+        if (document == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document Not Found");
+        }
+
+        byte[] content = document.getContent();
+        if (content == null || content.length == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document content is empty");
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        String contentType = document.getContentType();
+        if (contentType == null || contentType.isEmpty()) {
+            contentType = "application/octet-stream";
+        }
+        headers.setContentType(MediaType.parseMediaType(contentType));
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(content);
     }
 }

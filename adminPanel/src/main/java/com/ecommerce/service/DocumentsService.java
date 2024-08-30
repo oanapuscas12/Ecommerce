@@ -66,6 +66,8 @@ public class DocumentsService {
             throw new IOException("Cannot store file outside current directory.");
         }
 
+        byte[] content = file.getBytes();
+
         try (var inputStream = file.getInputStream()) {
             Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             logger.info("File saved successfully: {}", destinationFile);
@@ -74,8 +76,13 @@ public class DocumentsService {
             throw e;
         }
 
+        String contentType = file.getContentType();
+        if (contentType == null || contentType.isEmpty()) {
+            contentType = Document.getMimeType(filename);
+        }
+
         Document document = documentRepository.findByNameAndUploadedById(filename, userId)
-                .orElse(new Document(filename, destinationFile.toString(), user, LocalDateTime.now()));
+                .orElse(new Document(filename, destinationFile.toString(), user, LocalDateTime.now(), contentType, content));
 
         documentRepository.save(document);
         logger.info("Document metadata saved to database: {}", filename);
