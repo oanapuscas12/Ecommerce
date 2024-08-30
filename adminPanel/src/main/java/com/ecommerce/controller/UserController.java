@@ -11,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -21,52 +23,60 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @GetMapping("/users")
     public String getUsers(@RequestParam(required = false) String role,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam(defaultValue = "10") int size,
                            Model model) {
-        User currentUser = userService.getCurrentUser();
-        boolean isAdmin= currentUser.isAdmin();
-        String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
+        logger.info("Fetching users list - page: {}, size: {}, role: {}", page, size, role);
 
+        User currentUser = userService.getCurrentUser();
+        boolean isAdmin = currentUser.isAdmin();
+        logger.debug("Current user: {}, isAdmin: {}", currentUser.getUsername(), isAdmin);
+
+        String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
         Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
 
+        try {
+            if ("admin".equalsIgnoreCase(role)) {
+                Page<User> userPage = userService.getAllAdmins(pageable);
+                model.addAttribute("userPage", userPage);
+                logger.info("Fetched admin users, page count: {}", userPage.getTotalPages());
+            } else {
+                Page<Merchant> userPage = userService.getAllMerchants(pageable);
+                model.addAttribute("userPage", userPage);
+                model.addAttribute("merchant", "merchant");
+                logger.info("Fetched merchant users, page count: {}", userPage.getTotalPages());
+            }
 
-
-        if ("admin".equalsIgnoreCase(role)) {
-            Page<User> userPage;
-            userPage = userService.getAllAdmins(pageable);
-            model.addAttribute("userPage", userPage);
-        } else {
-            Page<Merchant> userPage;
-            userPage = userService.getAllMerchants(pageable);
-            model.addAttribute("userPage", userPage);
-            model.addAttribute("merchant", "merchant");
+            String listTitle = "admin".equalsIgnoreCase(role) ? "Admins List" : "Merchants List";
+            model.addAttribute("isAdmin", isAdmin);
+            model.addAttribute("role", role);
+            model.addAttribute("currentUser", currentUser);
+            model.addAttribute("otherRole", otherRole);
+            model.addAttribute("pageTitle", listTitle);
+        } catch (Exception e) {
+            logger.error("Error fetching users list", e);
+            throw e;
         }
-
-        String listTitle = "admin".equalsIgnoreCase(role) ? "Admins List" : "Merchants List";
-        if (role == null || role.isEmpty()) {
-            listTitle = Objects.equals(role, "admin") ? "Admins List" : "Merchants List";
-        }
-
-        model.addAttribute("isAdmin", isAdmin);
-        model.addAttribute("role", role);
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("otherRole", otherRole);
-        model.addAttribute("pageTitle", listTitle);
 
         return "user/users";
     }
 
     @GetMapping("/users/{id}")
     public String getUserById(@PathVariable Long id, @RequestParam(required = false) String role, Model model) {
+        logger.info("Fetching user details for user ID: {}", id);
+
         Optional<User> optionalUser = userService.getUserById(id);
         Optional<Merchant> optionalMerchant = userService.getMerchantById(id);
         User currentUser = userService.getCurrentUser();
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+            logger.debug("User found: {}", user.getUsername());
+
             model.addAttribute("isAdmin", userService.isAdmin());
             model.addAttribute("user", user);
             model.addAttribute("currentUser", currentUser);
@@ -77,12 +87,14 @@ public class UserController {
             if (optionalMerchant.isPresent()) {
                 Merchant merchant = optionalMerchant.get();
                 model.addAttribute("merchant", merchant);
+                logger.debug("Merchant details found for user ID: {}", id);
             }
 
             return "user/user-details";
+        } else {
+            logger.warn("User not found with ID: {}", id);
+            return "redirect:/user/users" + (role != null ? "?role=" + role : "");
         }
-
-        return "redirect:/user/users" + (role != null ? "?role=" + role : "");
     }
 
     @GetMapping("/users/create")
@@ -118,6 +130,7 @@ public class UserController {
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute User user) {
+        logger.info("Creating new user with username: {}", user.getUsername());
         userService.createUser(user);
         String role = user.isAdmin() ? "admin" : "merchant";
         return "redirect:/user/users?role=" + role;
@@ -152,24 +165,30 @@ public class UserController {
 
     @PostMapping("/users/deactivate/{id}")
     public String deactivateUser(@PathVariable Long id) {
+        logger.info("Deactivating user with ID: {}", id);
         userService.deactivateUser(id);
         try {
             User user = userService.getUserById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
             String role = user.isAdmin() ? "admin" : "merchant";
+            logger.debug("User deactivated: {}", user.getUsername());
             return "redirect:/user/users?role=" + role;
         } catch (NoSuchElementException e) {
+            logger.error("User not found during deactivation: {}", id, e);
             return "redirect:/user/users";
         }
     }
 
     @PostMapping("/users/activate/{id}")
     public String activateUser(@PathVariable Long id) {
+        logger.info("Activating user with ID: {}", id);
         userService.activateUser(id);
         try {
             User user = userService.getUserById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
             String role = user.isAdmin() ? "admin" : "merchant";
+            logger.debug("User activated: {}", user.getUsername());
             return "redirect:/user/users?role=" + role;
         } catch (NoSuchElementException e) {
+            logger.error("User not found during activation: {}", id, e);
             return "redirect:/user/users";
         }
     }
