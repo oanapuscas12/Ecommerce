@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,15 +33,21 @@ public class DocumentsService {
 
     private final Path rootLocation = Paths.get("uploaded-documents");
 
+    private static final Logger logger = LoggerFactory.getLogger(DocumentsService.class);
+
     public DocumentsService() {
         try {
             Files.createDirectories(rootLocation);
+            logger.info("Document storage directory initialized at: {}", rootLocation.toAbsolutePath());
         } catch (IOException e) {
+            logger.error("Could not initialize storage directory", e);
             throw new RuntimeException("Could not initialize storage", e);
         }
     }
 
     public void saveDocument(MultipartFile file, Long userId) throws IOException {
+        logger.info("Saving document for user ID: {}", userId);
+
         Optional<User> userOptional = userService.getUserById(userId);
         User user = userOptional.orElseThrow(() -> new IOException("User not found"));
 
@@ -49,6 +57,7 @@ public class DocumentsService {
         }
 
         filename = filename.replaceAll("[^a-zA-Z0-9.-]", "_");
+        logger.debug("Sanitized filename: {}", filename);
 
         Path destinationFile = this.rootLocation.resolve(Paths.get(filename))
                 .normalize().toAbsolutePath();
@@ -61,6 +70,10 @@ public class DocumentsService {
 
         try (var inputStream = file.getInputStream()) {
             Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            logger.info("File saved successfully: {}", destinationFile);
+        } catch (IOException e) {
+            logger.error("Error saving file: {}", filename, e);
+            throw e;
         }
 
         String contentType = file.getContentType();
@@ -72,6 +85,7 @@ public class DocumentsService {
                 .orElse(new Document(filename, destinationFile.toString(), user, LocalDateTime.now(), contentType, content));
 
         documentRepository.save(document);
+        logger.info("Document metadata saved to database: {}", filename);
     }
 
     @NonNull
@@ -95,6 +109,7 @@ public class DocumentsService {
     }
 
     public boolean isDocumentAlreadyExists(Long userId, String filename) {
+        logger.debug("Checking if document already exists for user ID: {} and filename: {}", userId, filename);
         return documentRepository.findByNameAndUploadedById(filename, userId).isPresent();
     }
 }
