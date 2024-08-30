@@ -77,7 +77,7 @@ public class DocumentsController {
             }
         } catch (Exception e) {
             logger.error("Error fetching documents list", e);
-            throw e;  // Re-throwing the exception after logging
+            throw e;
         }
 
         model.addAttribute("documents", documentPage);
