@@ -16,41 +16,46 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+// Controller class responsible for handling user-related HTTP requests.
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/user")  // Base URL for all methods in this controller.
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserService userService;  // Injects UserService for performing user-related operations.
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);  // Logger for this class.
 
-    @GetMapping("/users")
+    @GetMapping("/users")  // Handles GET requests to "/user/users".
     public String getUsers(@RequestParam(required = false) String role,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam(defaultValue = "10") int size,
                            Model model) {
+        // Logs the request parameters for fetching user lists.
         logger.info("Fetching users list - page: {}, size: {}, role: {}", page, size, role);
 
-        User currentUser = userService.getCurrentUser();
-        boolean isAdmin = currentUser.isAdmin();
+        User currentUser = userService.getCurrentUser();  // Gets the currently logged-in user.
+        boolean isAdmin = currentUser.isAdmin();  // Checks if the current user is an admin.
         logger.debug("Current user: {}, isAdmin: {}", currentUser.getUsername(), isAdmin);
 
+        // Determines the opposite role to toggle between admin and merchant views.
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
-        Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("username").ascending());  // Creates a pageable object for pagination.
 
         try {
+            // Fetches users based on the role parameter (admin or merchant).
             if ("admin".equalsIgnoreCase(role)) {
                 Page<User> userPage = userService.getAllAdmins(pageable);
-                model.addAttribute("userPage", userPage);
+                model.addAttribute("userPage", userPage);  // Adds the user page to the model.
                 logger.info("Fetched admin users, page count: {}", userPage.getTotalPages());
             } else {
                 Page<Merchant> userPage = userService.getAllMerchants(pageable);
-                model.addAttribute("userPage", userPage);
-                model.addAttribute("merchant", "merchant");
+                model.addAttribute("userPage", userPage);  // Adds the merchant page to the model.
+                model.addAttribute("merchant", "merchant");  // Sets an attribute to indicate the merchant role.
                 logger.info("Fetched merchant users, page count: {}", userPage.getTotalPages());
             }
 
+            // Adds additional attributes to the model for the view.
             String listTitle = "admin".equalsIgnoreCase(role) ? "Admins List" : "Merchants List";
             model.addAttribute("isAdmin", isAdmin);
             model.addAttribute("role", role);
@@ -58,25 +63,27 @@ public class UserController {
             model.addAttribute("otherRole", otherRole);
             model.addAttribute("pageTitle", listTitle);
         } catch (Exception e) {
-            logger.error("Error fetching users list", e);
-            throw e;
+            logger.error("Error fetching users list", e);  // Logs any exceptions that occur.
+            throw e;  // Rethrows the exception to handle it globally.
         }
 
+        // Returns the view name to be rendered.
         return "user/users";
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/users/{id}")  // Handles GET requests to "/user/users/{id}" to fetch details of a specific user.
     public String getUserById(@PathVariable Long id, @RequestParam(required = false) String role, Model model) {
         logger.info("Fetching user details for user ID: {}", id);
 
-        Optional<User> optionalUser = userService.getUserById(id);
-        Optional<Merchant> optionalMerchant = userService.getMerchantById(id);
-        User currentUser = userService.getCurrentUser();
+        Optional<User> optionalUser = userService.getUserById(id);  // Fetches user by ID.
+        Optional<Merchant> optionalMerchant = userService.getMerchantById(id);  // Fetches merchant by ID if applicable.
+        User currentUser = userService.getCurrentUser();  // Gets the currently logged-in user.
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             logger.debug("User found: {}", user.getUsername());
 
+            // Adds user and role details to the model.
             model.addAttribute("isAdmin", userService.isAdmin());
             model.addAttribute("user", user);
             model.addAttribute("currentUser", currentUser);
@@ -90,22 +97,24 @@ public class UserController {
                 logger.debug("Merchant details found for user ID: {}", id);
             }
 
-            return "user/user-details";
+            return "user/user-details";  // Returns the view for displaying user details.
         } else {
             logger.warn("User not found with ID: {}", id);
+            // Redirects to the user list if the user is not found.
             return "redirect:/user/users" + (role != null ? "?role=" + role : "");
         }
     }
 
-    @GetMapping("/users/create")
+    @GetMapping("/users/create")  // Handles GET requests to "/user/users/create" for showing the user creation form.
     public String createUserForm(@RequestParam(value = "username", required = false) String username,
                                  @RequestParam(value = "email", required = false) String email,
                                  Model model) {
         User currentUser = userService.getCurrentUser();
         boolean isAdmin = currentUser.isAdmin();
-        String role = isAdmin ? "admin" : "merchant";
+        String role = isAdmin ? "admin" : "merchant";  // Sets the role based on the current user's role.
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
 
+        // Prepares the model with attributes for creating a new user.
         model.addAttribute("user", new User());
         model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("currentUser", currentUser);
@@ -113,33 +122,33 @@ public class UserController {
         model.addAttribute("pageTitle", "Create new user");
         model.addAttribute("role", role);
 
-        return "user/create-user";
+        return "user/create-user";  // Returns the view for the user creation form.
     }
 
-    @GetMapping("/users/validateUsername")
+    @GetMapping("/users/validateUsername")  // Handles GET requests to validate a username.
     @ResponseBody
     public boolean validateUsername(@RequestParam("username") String username) {
-        return userService.existsByUsername(username);
+        return userService.existsByUsername(username);  // Checks if the username exists.
     }
 
-    @GetMapping("/users/validateEmail")
+    @GetMapping("/users/validateEmail")  // Handles GET requests to validate an email.
     @ResponseBody
     public boolean validateEmail(@RequestParam("email") String email) {
-        return userService.existsByEmail(email);
+        return userService.existsByEmail(email);  // Checks if the email exists.
     }
 
-    @PostMapping("/users")
+    @PostMapping("/users")  // Handles POST requests to create a new user.
     public String createUser(@ModelAttribute User user) {
         logger.info("Creating new user with username: {}", user.getUsername());
-        userService.createUser(user);
+        userService.createUser(user);  // Calls service to create the user.
         String role = user.isAdmin() ? "admin" : "merchant";
-        return "redirect:/user/users?role=" + role;
+        return "redirect:/user/users?role=" + role;  // Redirects to the user list page.
     }
 
-    @GetMapping("/users/edit/{id}")
+    @GetMapping("/users/edit/{id}")  // Handles GET requests to show the user edit form.
     public String editUserForm(@PathVariable Long id, @RequestParam(required = false) String role, Model model) {
-        Optional<User> user = userService.getUserById(id);
-        Optional<Merchant> merchant = userService.getMerchantById(id);
+        Optional<User> user = userService.getUserById(id);  // Fetches the user by ID.
+        Optional<Merchant> merchant = userService.getMerchantById(id);  // Fetches the merchant by ID if applicable.
 
         if (user.isPresent()) {
             User currentUser = userService.getCurrentUser();
@@ -151,45 +160,45 @@ public class UserController {
             model.addAttribute("pageTitle", "Edit User: " + user.get().getUsername());
             merchant.ifPresent(value -> model.addAttribute("merchant", value));
 
-            return "user/edit-user";
+            return "user/edit-user";  // Returns the view for editing user details.
         }
-        return "redirect:/user/users?role=" + (role != null ? role : "admin");
+        return "redirect:/user/users?role=" + (role != null ? role : "admin");  // Redirects to the user list if user is not found.
     }
 
-    @PostMapping("/users/edit/{id}")
+    @PostMapping("/users/edit/{id}")  // Handles POST requests to update user details.
     public String editUser(@PathVariable Long id, @ModelAttribute User user) {
-        userService.updateUser(id, user);
+        userService.updateUser(id, user);  // Calls service to update the user.
         String role = user.isAdmin() ? "admin" : "merchant";
-        return "redirect:/user/users?role=" + role;
+        return "redirect:/user/users?role=" + role;  // Redirects to the user list page.
     }
 
-    @PostMapping("/users/deactivate/{id}")
+    @PostMapping("/users/deactivate/{id}")  // Handles POST requests to deactivate a user.
     public String deactivateUser(@PathVariable Long id) {
         logger.info("Deactivating user with ID: {}", id);
-        userService.deactivateUser(id);
+        userService.deactivateUser(id);  // Calls service to deactivate the user.
         try {
             User user = userService.getUserById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
             String role = user.isAdmin() ? "admin" : "merchant";
             logger.debug("User deactivated: {}", user.getUsername());
-            return "redirect:/user/users?role=" + role;
+            return "redirect:/user/users?role=" + role;  // Redirects to the user list page.
         } catch (NoSuchElementException e) {
             logger.error("User not found during deactivation: {}", id, e);
-            return "redirect:/user/users";
+            return "redirect:/user/users";  // Redirects to the user list page if user is not found.
         }
     }
 
-    @PostMapping("/users/activate/{id}")
+    @PostMapping("/users/activate/{id}")  // Handles POST requests to activate a user.
     public String activateUser(@PathVariable Long id) {
         logger.info("Activating user with ID: {}", id);
-        userService.activateUser(id);
+        userService.activateUser(id);  // Calls service to activate the user.
         try {
             User user = userService.getUserById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
             String role = user.isAdmin() ? "admin" : "merchant";
             logger.debug("User activated: {}", user.getUsername());
-            return "redirect:/user/users?role=" + role;
+            return "redirect:/user/users?role=" + role;  // Redirects to the user list page.
         } catch (NoSuchElementException e) {
             logger.error("User not found during activation: {}", id, e);
-            return "redirect:/user/users";
+            return "redirect:/user/users";  // Redirects to the user list page if user is not found.
         }
     }
 }
