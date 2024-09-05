@@ -16,20 +16,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
+@Service  // This class is a Spring service component.
 public class DatabaseAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository;  // Repository for accessing user data in the database.
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;  // Encoder for comparing passwords.
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authenticationToken) throws AuthenticationException {
-        // No additional checks required
+        // No additional checks required, password and username are handled in `retrieveUser` method.
     }
 
     @Override
@@ -42,12 +42,14 @@ public class DatabaseAuthenticationProvider extends AbstractUserDetailsAuthentic
             valid = false;
         }
 
+        // Fetch the user from the database.
         Optional<User> user = userRepository.findByUsername(userName);
 
         if (!user.isPresent()) {
             this.logger.warn("Username {}: user not found", userName);
             valid = false;
         } else {
+            // Check if the provided password matches the stored password.
             if (passwordEncoder.matches(password, user.get().getPassword())) {
                 if (!user.get().isActive()) {
                     this.logger.warn("Username {}: not active", userName);
@@ -64,7 +66,10 @@ public class DatabaseAuthenticationProvider extends AbstractUserDetailsAuthentic
         }
 
         User userEntity = user.get();
+        // Update the last login timestamp for the user.
         userRepository.setLastLoginForId(userEntity.getId());
+
+        // Return a Spring Security User object with the user's username, password, and authorities.
         return new org.springframework.security.core.userdetails.User(userEntity.getUsername(), userEntity.getPassword(), userEntity.getAuthorities());
     }
 }

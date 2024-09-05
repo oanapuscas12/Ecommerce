@@ -20,39 +20,55 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
+@Service  // Indicates that this class is a Spring service component.
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository;  // Repository for user data.
 
     @Autowired
-    private MerchantRepository merchantRepository;
+    private MerchantRepository merchantRepository;  // Repository for merchant data.
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;  // Password encoder for handling user passwords.
 
     @Autowired
-    private EmailSenderService emailSenderService;
+    private EmailSenderService emailSenderService;  // Service for sending emails.
 
     @Value("${domain}")
-    private String domain;
+    private String domain;  // Base domain for email links.
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    /**
+     * Retrieves all users from the repository.
+     * @return a list of all users.
+     */
     public List<User> getAllUsers() {
         logger.info("Fetching all users");
         return userRepository.findAll();
     }
 
+    /**
+     * Retrieves a user by their ID.
+     * @param id the ID of the user.
+     * @return an Optional containing the user if found, otherwise empty.
+     */
     public Optional<User> getUserById(Long id) {
         logger.info("Fetching user by ID: {}", id);
         return userRepository.findById(id);
     }
 
+    /**
+     * Creates a new user and saves it to the repository.
+     * @param user the user to be created.
+     * @return the created user.
+     * @throws IllegalArgumentException if the username or email already exists.
+     */
     public User createUser(User user) {
         logger.info("Creating user with username: {}", user.getUsername());
 
+        // Check if the username or email already exists.
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("Username already exists.");
         }
@@ -60,12 +76,15 @@ public class UserService {
             throw new IllegalArgumentException("Email already exists.");
         }
 
+        // Encode the user's password.
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         String token = generateToken();
         user.setToken(token);
 
         User savedUser;
+
+        // Create and save either a User or Merchant based on user type.
         if (user.isAdmin()) {
             savedUser = userRepository.save(user);
             logger.info("Admin user created with ID: {}", savedUser.getId());
@@ -82,6 +101,7 @@ public class UserService {
             logger.info("Merchant created with ID: {}", savedUser.getId());
         }
 
+        // Prepare and send confirmation email (commented out).
         String confirmationLink = domain + "/confirm-account?token=" + token;
         String subject = "Confirm Your Account";
         String body = "Hello " + user.getUsername() + ",\n\nPlease confirm your account by clicking the link below:\n" + confirmationLink + "\n\nBest regards,\nThe Team";
@@ -92,6 +112,11 @@ public class UserService {
         return savedUser;
     }
 
+    /**
+     * Confirms a user's account using the provided token.
+     * @param token the token used to confirm the account.
+     * @return true if the account was successfully confirmed, false otherwise.
+     */
     public boolean confirmUserAccount(String token) {
         Optional<User> userOptional = userRepository.findByToken(token);
         if (userOptional.isPresent()) {
@@ -106,6 +131,10 @@ public class UserService {
         return false;
     }
 
+    /**
+     * Deactivates a user by setting their account to inactive.
+     * @param id the ID of the user to be deactivated.
+     */
     public void deactivateUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
@@ -118,6 +147,10 @@ public class UserService {
         }
     }
 
+    /**
+     * Activates a user by setting their account to active.
+     * @param id the ID of the user to be activated.
+     */
     public void activateUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
@@ -130,22 +163,47 @@ public class UserService {
         }
     }
 
+    /**
+     * Checks if a username already exists in the repository.
+     * @param username the username to check.
+     * @return true if the username exists, false otherwise.
+     */
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
+    /**
+     * Checks if an email already exists in the repository.
+     * @param email the email to check.
+     * @return true if the email exists, false otherwise.
+     */
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
+    /**
+     * Retrieves all users with admin privileges.
+     * @param pageable pagination information.
+     * @return a page of admin users.
+     */
     public Page<User> getAllAdmins(Pageable pageable) {
         return userRepository.findByIsAdmin(true, pageable);
     }
 
+    /**
+     * Retrieves all merchants with pagination.
+     * @param pageable pagination information.
+     * @return a page of merchants.
+     */
     public Page<Merchant> getAllMerchants(Pageable pageable) {
         return merchantRepository.findAll(pageable);
     }
 
+    /**
+     * Updates an existing user's information.
+     * @param id the ID of the user to be updated.
+     * @param updatedUser the updated user information.
+     */
     public void updateUser(Long id, User updatedUser) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
@@ -158,6 +216,11 @@ public class UserService {
         }
     }
 
+    /**
+     * Initiates a password recovery process for a user based on their email.
+     * @param email the email of the user requesting password recovery.
+     * @return true if the email exists and the recovery process was initiated, false otherwise.
+     */
     public boolean initiatePasswordRecover(String email) {
         logger.info("Initiating password recovery for email: {}", email);
         Optional<User> userOptional = userRepository.findByEmail(email);
@@ -167,6 +230,7 @@ public class UserService {
             user.setToken(token);
             userRepository.save(user);
 
+            // Prepare the password reset email.
             String resetLink = domain + "/reset-password?token=" + token;
             String body = "To reset your password, click the link below:\n" + resetLink;
 
@@ -179,10 +243,21 @@ public class UserService {
         return false;
     }
 
+    /**
+     * Validates a password reset token.
+     * @param token the token to validate.
+     * @return true if the token is valid, false otherwise.
+     */
     public boolean validatePasswordResetToken(String token) {
         return userRepository.findByToken(token).isPresent();
     }
 
+    /**
+     * Resets the user's password using the provided token and new password.
+     * @param token the token used for resetting the password.
+     * @param newPassword the new password.
+     * @return true if the password was successfully reset, false otherwise.
+     */
     public boolean resetPassword(String token, String newPassword) {
         logger.info("Resetting password for token: {}", token);
         Optional<User> userOptional = userRepository.findByToken(token);
@@ -198,10 +273,18 @@ public class UserService {
         return false;
     }
 
+    /**
+     * Generates a unique token for user verification or password reset.
+     * @return a randomly generated token.
+     */
     private String generateToken() {
         return UUID.randomUUID().toString();
     }
 
+    /**
+     * Retrieves the currently authenticated user.
+     * @return the current user if authenticated, null otherwise.
+     */
     public User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
@@ -214,16 +297,29 @@ public class UserService {
         }
     }
 
+    /**
+     * Checks if the currently authenticated user has admin privileges.
+     * @return true if the user is an admin, false otherwise.
+     */
     public boolean isAdmin() {
         User user = getCurrentUser();
         return user != null && user.isAdmin();
     }
 
+    /**
+     * Checks if the currently authenticated user is a merchant.
+     * @return true if the user is a merchant, false otherwise.
+     */
     public boolean isMerchant() {
         User user = getCurrentUser();
         return user != null && !user.isAdmin();
     }
 
+    /**
+     * Retrieves a list of non-admin users, excluding a specified user ID.
+     * @param excludeUserId the ID of the user to exclude from the list.
+     * @return a list of non-admin users excluding the specified user ID.
+     */
     public List<User> getNonAdminUsersExcluding(Long excludeUserId) {
         List<User> allUsers = userRepository.findAll();
 
@@ -232,6 +328,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves the number of merchants enrolled each month for a given year.
+     * @param year the year for which to retrieve monthly enrollments.
+     * @return a map of month names to the number of new merchant enrollments.
+     */
     public Map<String, Long> getAllMonthlyMerchantEnrollments(int year) {
         List<User> allUsers = userRepository.findAll();
 
@@ -263,6 +364,10 @@ public class UserService {
         return monthlyEnrollments;
     }
 
+    /**
+     * Retrieves the count of merchants by county.
+     * @return a map of county names to the number of merchants in each county.
+     */
     public Map<String, Long> getMerchantCountByCounty() {
         List<Merchant> allMerchants = merchantRepository.findAll();
 
@@ -271,6 +376,10 @@ public class UserService {
                 .collect(Collectors.groupingBy(Merchant::getCounty, Collectors.counting()));
     }
 
+    /**
+     * Retrieves merchant activity statistics for the current month.
+     * @return a map of activity types (New, Returning, Inactive) to counts.
+     */
     public Map<String, Long> getMerchantActivityForCurrentMonth() {
         LocalDate today = LocalDate.now();
         YearMonth currentMonth = YearMonth.from(today);
@@ -314,6 +423,11 @@ public class UserService {
         return activityCounts;
     }
 
+    /**
+     * Retrieves a merchant by their ID.
+     * @param id the ID of the merchant.
+     * @return an Optional containing the merchant if found, otherwise empty.
+     */
     public Optional<Merchant> getMerchantById(Long id) {
         return merchantRepository.findById(id);
     }
