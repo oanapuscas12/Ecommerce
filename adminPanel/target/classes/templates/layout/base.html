@@ -38,6 +38,9 @@
                     <li class="nav-item">
                         <a th:href="@{/documents/upload-document}" class="nav-link">Upload Document</a>
                     </li>
+                    <li class="nav-item" th:if="${isAdmin}" >
+                        <a href="/feedback/list" class="nav-link">View Feedback List</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -45,6 +48,9 @@
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/user/users/{id}(id=${currentUser.id})}" class="nav-link" th:text="${currentUser.username}">User Name</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{/feedback/form}" class="nav-link">Feedback</a>
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/logout}" class="nav-link">Logout</a>

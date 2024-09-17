@@ -1,0 +1,30 @@
+.message-container h1 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.message-container p {
+    font-size: 16px;
+}
+
+.message-container-success {
+    background-color: #28a745;
+    color: #fff;
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.message-container-fail {
+    background-color: #dc3545;
+    color: #fff;
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
