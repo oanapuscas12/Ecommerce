@@ -7,13 +7,13 @@
     <link rel="stylesheet" th:href="@{/css/success-fail.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Response</title>
-<!--    <script type="text/javascript">-->
-<!--&lt;!&ndash;        function redirect() {&ndash;&gt;-->
-<!--&lt;!&ndash;            var url = /*[[${formPageUrl}]]*/ '/home';&ndash;&gt;-->
-<!--&lt;!&ndash;            window.location.href = url;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        setTimeout(redirect, 2000);&ndash;&gt;-->
-<!--    </script>-->
+    <script type="text/javascript">
+        function redirect() {
+            var url = /*[[${formPageUrl}]]*/ '/home';
+            window.location.href = url;
+        }
+        setTimeout(redirect, 2000);
+    </script>
 </head>
 
 <body data-status="${status}">

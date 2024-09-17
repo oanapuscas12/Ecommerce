@@ -7,7 +7,6 @@
     <link rel="stylesheet" th:href="@{/css/feedback-form.css}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-    <script th:src="@{/js/feedback-form.js}"></script>
 </head>
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
@@ -35,7 +34,7 @@
                     <td th:text="${feedback.username}"></td>
                     <td th:text="${feedback.suggestion}"></td>
                     <td th:text="${feedback.problem}"></td>
-                    <td th:text="${feedback.submittedAt}"></td>
+                    <td th:text="${feedback.FormattedSubmittedAt}"></td>
                 </tr>
                 </tbody>
             </table>

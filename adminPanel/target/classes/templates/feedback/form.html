@@ -20,10 +20,12 @@
                 <input type="hidden" th:field="*{email}" />
 
                 <label for="suggestion">Your suggestion:</label><br>
-                <textarea id="suggestion" th:field="*{suggestion}" rows="4" cols="50" required></textarea><br><br>
+                <textarea id="suggestion" th:field="*{suggestion}" rows="4" cols="50" maxlength="255" required></textarea><br>
+                <div id="suggestion-error" style="display: none; color: red;">Maximum length of 255 characters exceeded.</div><br>
 
                 <label for="problem">What problem are you trying to solve with this suggestion?</label><br>
-                <textarea id="problem" th:field="*{problem}" rows="4" cols="50" required></textarea><br><br>
+                <textarea id="problem" th:field="*{problem}" rows="4" cols="50" maxlength="255" required></textarea><br>
+                <div id="problem-error" style="display: none; color: red;">Maximum length of 255 characters exceeded.</div><br>
 
                 <input id="submitBtn" type="submit" value="Submit" disabled>
             </form>
