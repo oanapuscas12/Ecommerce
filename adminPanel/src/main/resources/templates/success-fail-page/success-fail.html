@@ -23,8 +23,8 @@
         <p>You will be redirected back to home shortly.</p>
     </div>
 
-    <div th:if="${status == 'failure'}">
-        <h1 th:text="${message}" class="message-container-failure"></h1>
+    <div th:if="${status == 'fail'}">
+        <h1 th:text="${message}" class="message-container-fail"></h1>
         <p>You will be redirected back to the form shortly.</p>
     </div>
 </div>

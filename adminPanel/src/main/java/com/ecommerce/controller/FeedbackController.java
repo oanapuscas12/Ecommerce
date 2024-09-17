@@ -1,6 +1,5 @@
 package com.ecommerce.controller;
 
-import com.ecommerce.model.Document;
 import com.ecommerce.model.Feedback;
 import com.ecommerce.model.User;
 import com.ecommerce.service.FeedbackService;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/feedback")
 public class FeedbackController {
@@ -26,13 +23,13 @@ public class FeedbackController {
     private UserService userService;
 
     @GetMapping("/list")
-    public String showFeedbackList(Model model, @RequestParam(required = false) String role,            @RequestParam(value = "page", defaultValue = "0") int page,
-    @RequestParam(value = "size", defaultValue = "10") int size) {
+    public String showFeedbackList(Model model, @RequestParam(required = false) String role, @RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "size", defaultValue = "10") int size) {
         User currentUser = userService.getCurrentUser();
         boolean isAdmin = currentUser.isAdmin();
         String otherRole = "admin".equalsIgnoreCase(role) ? "merchant" : "admin";
         Pageable pageable = PageRequest.of(page, size);
-        Page<Feedback> feedbackPage=feedbackService.getAllFeedback(pageable);
+        Page<Feedback> feedbackPage = feedbackService.getAllFeedback(pageable);
         model.addAttribute("feedbackList", feedbackPage);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("isAdmin", isAdmin);
