@@ -1,0 +1,32 @@
+.table td {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    word-wrap: break-word;
+    vertical-align: top;
+    position: relative;
+    padding-right: 30px;
+}
+
+.table td.expanded {
+    white-space: normal;
+    max-height: none;
+    overflow: visible;
+}
+
+.more-indicator {
+    color: blue;
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    background-color: #fff;
+    padding-left: 5px;
+}
+
+.table td.expanded .more-indicator {
+    display: none;
+}
