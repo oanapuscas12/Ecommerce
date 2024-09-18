@@ -1,12 +1,16 @@
 package com.ecommerce.service;
 
+import com.ecommerce.controller.NotificationController;
 import com.ecommerce.model.Notification;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.NotificationRepository;
 import com.ecommerce.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -14,10 +18,13 @@ import java.util.NoSuchElementException;
 @Service
 public class NotificationService {
 
+    @Autowired
     private NotificationRepository notificationRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(NotificationController.class);
 
     /**
      * Creates and saves a notification for a specific user.
@@ -61,6 +68,14 @@ public class NotificationService {
     }
 
     public List<Notification> getUnreadNotificationsForUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
         return notificationRepository.findByUserAndIsReadFalse(user);
+    }
+
+    @PostConstruct
+    public void init() {
+        logger.info("NotificationService bean initialized");
     }
 }
