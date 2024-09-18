@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Check if elements exist
     if (!notificationIcon || !notificationBadge || !notificationPanel || !notificationList || !noNotifications) {
         console.error('One or more notification elements are missing.');
-        return;
+        return; // Exit the function to avoid further errors
     }
 
     function fetchNotifications() {
@@ -42,7 +42,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     notificationIcon.addEventListener('click', function () {
-        notificationPanel.style.display = (notificationPanel.style.display === 'block') ? 'none' : 'block';
+        if (notificationPanel.style.display === 'block' || notificationPanel.style.display === '') {
+            notificationPanel.style.display = 'none';
+        } else {
+            notificationPanel.style.display = 'block';
+            fetchNotifications(); // Ensure notifications are fetched when the panel is opened
+        }
     });
 
     // Fetch notifications on page load
