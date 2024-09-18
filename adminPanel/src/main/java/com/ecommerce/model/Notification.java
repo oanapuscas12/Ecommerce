@@ -11,26 +11,18 @@ import java.time.LocalDateTime;
 @Entity
 public class Notification {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
-    @Setter
     private String message;
 
-    private boolean isRead; // Indicates if the notification has been read
+    private boolean isRead;
 
-    @Getter
-    @Setter
     private LocalDateTime timestamp;
 
-    @Getter
-    @Setter
     @ManyToOne
-    @JoinColumn(name = "user_id") // Explicit JoinColumn to reference user_id
+    @JoinColumn(name = "user_id")
     private User user;
 
     public boolean isRead() {

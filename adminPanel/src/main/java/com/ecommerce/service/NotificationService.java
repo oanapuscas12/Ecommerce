@@ -46,7 +46,7 @@ public class NotificationService {
      * @return a list of unread notifications.
      */
     public List<Notification> getUnreadNotifications(Long userId) {
-        return notificationRepository.findByUserIdAndRead(userId, false);
+        return notificationRepository.findByUserIdAndIsRead(userId, false);
     }
 
     /**
