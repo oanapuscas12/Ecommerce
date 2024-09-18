@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pageTitle}">Feedback List</title>
-    <link rel="stylesheet" th:href="@{/css/feedback-form.css}">
+    <link rel="stylesheet" th:href="@{/css/feedback-list.css}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <script th:src="@{/js/feedback-list.js}"></script>
 </head>
 <head th:replace="layout/base :: head"></head>
 <header th:replace="layout/base :: navigation"></header>
@@ -32,8 +33,14 @@
                 <tbody>
                 <tr scope="row" th:each="feedback : ${feedbackList.content}">
                     <td th:text="${feedback.username}"></td>
-                    <td th:text="${feedback.suggestion}"></td>
-                    <td th:text="${feedback.problem}"></td>
+                    <td>
+                        <span class="content" th:text="${feedback.suggestion}"></span>
+                        <span class="more-indicator">... more</span>
+                    </td>
+                    <td>
+                        <span class="content" th:text="${feedback.problem}"></span>
+                        <span class="more-indicator">... more</span>
+                    </td>
                     <td th:text="${feedback.FormattedSubmittedAt}"></td>
                 </tr>
                 </tbody>
