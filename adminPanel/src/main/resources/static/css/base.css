@@ -37,6 +37,23 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.notification-icon {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.notification-icon .badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+}
+
 @media (max-width: 768px) {
     .bg-light {
         background: radial-gradient(circle, rgba(211, 211, 211, 1) 0%, rgba(169, 169, 169, 1) 100%);
