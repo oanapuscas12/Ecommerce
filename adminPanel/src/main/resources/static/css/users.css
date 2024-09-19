@@ -35,6 +35,10 @@ table {
     margin:0!important;
 }
 
+form {
+    box-shadow: none!important;
+}
+
 .btn-secondary{
    color: black!important;
 }

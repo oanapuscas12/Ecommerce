@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+    <link rel="stylesheet" th:href="@{/css/create-user.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/feedback-form.js}"></script>
+</head>
+<head th:replace="layout/base :: head"></head>
+<header th:replace="layout/base :: navigation"></header>
+<body>
+<h1 th:text="${pageTitle}" class="text-center w-100 mt-3"></h1>
+<main class="main-container">
+    <section th:fragment="content">
+        <div class="form-wrapper">
+            <form action="#" th:action="@{/feedback/submit}" th:object="${feedback}" method="post">
+                <input type="hidden" th:field="*{username}" />
+                <input type="hidden" th:field="*{email}" />
+
+                <label for="suggestion">Your suggestion:</label><br>
+                <textarea id="suggestion" th:field="*{suggestion}" rows="4" cols="50" maxlength="255" required></textarea><br>
+                <div id="suggestion-error" style="display: none; color: red;">Maximum length of 255 characters exceeded.</div><br>
+
+                <label for="problem">What problem are you trying to solve with this suggestion?</label><br>
+                <textarea id="problem" th:field="*{problem}" rows="4" cols="50" maxlength="255" required></textarea><br>
+                <div id="problem-error" style="display: none; color: red;">Maximum length of 255 characters exceeded.</div><br>
+
+                <input id="submitBtn" type="submit" value="Submit" disabled>
+            </form>
+        </div>
+    </section>
+</main>
+<footer></footer>
+</body>
+</html>
