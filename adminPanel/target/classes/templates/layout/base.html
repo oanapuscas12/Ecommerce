@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script th:src="@{/js/base.js}"></script>
     <title th:text="${pageTitle}">Page Title</title>
 </head>
@@ -38,9 +39,6 @@
                     <li class="nav-item">
                         <a th:href="@{/documents/upload-document}" class="nav-link">Upload Document</a>
                     </li>
-                    <li class="nav-item" th:if="${isAdmin}" >
-                        <a href="/feedback/list" class="nav-link">View Feedback List</a>
-                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
@@ -49,8 +47,10 @@
                     <li class="nav-item">
                         <a th:href="@{/user/users/{id}(id=${currentUser.id})}" class="nav-link" th:text="${currentUser.username}">User Name</a>
                     </li>
-                    <li class="nav-item">
-                        <a th:href="@{/feedback/form}" class="nav-link">Feedback</a>
+                    <!-- Notification Icon -->
+                    <li class="notification-icon" id="notificationIcon">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge badge-danger" id="notificationBadge">0</span>
                     </li>
                     <li class="nav-item">
                         <a th:href="@{/logout}" class="nav-link">Logout</a>
@@ -61,6 +61,10 @@
     </nav>
 </header>
 <body>
+    <!-- Include Bootstrap JS and FontAwesome for icons -->
+    <script src="path/to/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="path/to/your/scripts.js"></script>
 </body>
 <footer>
 </footer>

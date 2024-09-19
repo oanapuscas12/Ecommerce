@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const merchantSelect = document.getElementById('merchantId');
-    if (merchantSelect) {
-        merchantSelect.addEventListener('change', function () {
-            this.form.submit();
-        });
-    }
+    merchantSelect.addEventListener('change', function () {
+        this.form.submit();
+    });
 
     $('#previewModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
