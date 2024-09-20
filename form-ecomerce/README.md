@@ -8,8 +8,8 @@ database: 'DB_DATABASE_NAME',
 password: 'DB_PASSWORD',
 port: 'DB_PORT',
 ---------------
-create the table 'form_users' in your db with the query command:
-CREATE TABLE form_users (
+create the table 'merchants' in your db with the query command:
+CREATE TABLE merchants (
     id SERIAL PRIMARY KEY,
     cui VARCHAR(50) NOT NULL,
     denumire VARCHAR(255) NOT NULL,
