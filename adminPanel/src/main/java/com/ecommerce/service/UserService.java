@@ -204,13 +204,16 @@ public class UserService {
 
     public User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         if (principal instanceof UserDetails) {
             String username = ((UserDetails) principal).getUsername();
             logger.info("Fetching current user: {}", username);
-            return userRepository.findByUsername(username).orElse(null);
+
+            return userRepository.findByUsername(username)
+                    .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
         } else {
             logger.warn("No authenticated user found in the security context");
-            return null;
+            throw new IllegalStateException("No authenticated user found in the security context");
         }
     }
 

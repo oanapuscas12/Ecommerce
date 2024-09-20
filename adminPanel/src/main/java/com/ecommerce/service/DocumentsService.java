@@ -4,23 +4,25 @@ import com.ecommerce.model.Document;
 import com.ecommerce.model.User;
 import com.ecommerce.repository.DocumentRepository;
 import lombok.NonNull;
-import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class DocumentsService {
@@ -45,47 +47,82 @@ public class DocumentsService {
         }
     }
 
+    @Transactional
     public void saveDocument(MultipartFile file, Long userId) throws IOException {
-        logger.info("Saving document for user ID: {}", userId);
+        User user = userService.getUserById(userId).orElseThrow(() -> new IOException("User not found"));
 
-        Optional<User> userOptional = userService.getUserById(userId);
-        User user = userOptional.orElseThrow(() -> new IOException("User not found"));
-
-        String filename = file.getOriginalFilename();
+        String filename = sanitizeFilename(file.getOriginalFilename());
         if (filename == null || filename.isEmpty()) {
             throw new IOException("Filename is null or empty");
         }
 
-        filename = filename.replaceAll("[^a-zA-Z0-9.-]", "_");
-        logger.debug("Sanitized filename: {}", filename);
+        Path destinationFile = resolveFilePath(filename);
 
-        Path destinationFile = this.rootLocation.resolve(Paths.get(filename))
-                .normalize().toAbsolutePath();
-
-        if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-            throw new IOException("Cannot store file outside current directory.");
-        }
-
-        byte[] content = file.getBytes();
-
-        try (var inputStream = file.getInputStream()) {
+        try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-            logger.info("File saved successfully: {}", destinationFile);
+            logger.info("File {} successfully saved to {}", filename, destinationFile);
         } catch (IOException e) {
             logger.error("Error saving file: {}", filename, e);
-            throw e;
+            throw new IOException("Error saving file", e);
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null || contentType.isEmpty()) {
-            contentType = Document.getMimeType(filename);
-        }
+        String contentType = determineContentType(file, filename);
 
-        Document document = documentRepository.findByNameAndUploadedById(filename, userId)
-                .orElse(new Document(filename, destinationFile.toString(), user, LocalDateTime.now(), contentType, content));
+        Document document = new Document(filename, destinationFile.toString(), user, LocalDateTime.now(), contentType);
 
         documentRepository.save(document);
-        logger.info("Document metadata saved to database: {}", filename);
+        logger.info("Document metadata saved for file: {}", filename);
+    }
+
+    private String sanitizeFilename(String filename) {
+        if (filename == null) {
+            return null;
+        }
+        return filename.replaceAll("[^a-zA-Z0-9.-]", "_");
+    }
+
+    private Path resolveFilePath(String filename) throws IOException {
+        Path destinationFile = rootLocation.resolve(Paths.get(filename)).normalize().toAbsolutePath();
+
+        if (!destinationFile.getParent().equals(rootLocation.toAbsolutePath())) {
+            throw new IOException("Cannot store file outside the current directory.");
+        }
+        return destinationFile;
+    }
+
+    private String determineContentType(MultipartFile file, String filename) {
+        String contentType = file.getContentType();
+        if (contentType == null || contentType.isEmpty()) {
+            contentType = getMimeType(filename);
+        }
+        return contentType;
+    }
+
+    private String getMimeType(String filename) {
+        String extension = getFileExtension(filename);
+        switch (extension) {
+            case "pdf":
+                return "application/pdf";
+            case "png":
+                return "image/png";
+            case "jpg":
+            case "jpeg":
+                return "image/jpeg";
+            case "txt":
+                return "text/plain";
+            case "html":
+                return "text/html";
+            default:
+                return "application/octet-stream";
+        }
+    }
+
+    private String getFileExtension(String filename) {
+        int lastIndexOfDot = filename.lastIndexOf('.');
+        if (lastIndexOfDot == -1) {
+            return "";
+        }
+        return filename.substring(lastIndexOfDot + 1).toLowerCase();
     }
 
     @NonNull
@@ -99,14 +136,20 @@ public class DocumentsService {
         return documentRepository.findByUploadedById(merchantId, pageable);
     }
 
+    public List<User> getMerchantsWithDocuments() {
+        return documentRepository.findDistinctMerchantsWithDocuments();
+    }
+
     @NonNull
     public Page<Document> getAllDocuments(@NonNull Pageable pageable) {
         return documentRepository.findAll(pageable);
     }
 
     public Document getDocumentById(Long documentId) {
-        return documentRepository.findById(documentId).orElse(null);
+        return documentRepository.findById(documentId)
+                .orElseThrow(() -> new NoSuchElementException("Document not found with ID: " + documentId));
     }
+
 
     public boolean isDocumentAlreadyExists(Long userId, String filename) {
         logger.debug("Checking if document already exists for user ID: {} and filename: {}", userId, filename);
