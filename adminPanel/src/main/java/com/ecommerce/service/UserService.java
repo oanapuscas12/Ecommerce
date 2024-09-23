@@ -146,6 +146,39 @@ public class UserService {
         return merchantRepository.findAll(pageable);
     }
 
+    public void updateMerchant(Long id, User updatedUser, Merchant merchant) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setAdmin(updatedUser.isAdmin());
+            existingUser.setActive(updatedUser.isActive());
+
+            // Check if the existing user is a Merchant
+            if (merchant!=null) {
+                Merchant existingMerchant = (Merchant) existingUser;
+
+                existingMerchant.setCui(merchant.getCui());
+                existingMerchant.setLegalBusinessName(merchant.getLegalBusinessName());
+                existingMerchant.setPhoneNumber(merchant.getPhoneNumber());
+                existingMerchant.setNr_reg_com(merchant.getNr_reg_com());
+                existingMerchant.setCountry(merchant.getCountry());
+                existingMerchant.setCounty(merchant.getCounty());
+                existingMerchant.setCity(merchant.getCity());
+                existingMerchant.setAddress(merchant.getAddress());
+                existingMerchant.setPostalCode(merchant.getPostalCode());
+                existingMerchant.setIndustry(merchant.getIndustry());
+                existingMerchant.setStoreLaunched(merchant.isStoreLaunched());
+                existingMerchant.setStoreActive(merchant.isStoreActive());
+                merchantRepository.save(existingMerchant);
+            }
+
+            userRepository.save(existingUser);
+        }
+    }
+
     public void updateUser(Long id, User updatedUser) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {

@@ -12,8 +12,9 @@
 <main>
     <section th:fragment="content">
         <div class="form-wrapper">
-            <form th:action="@{/user/users/edit/{id}(id=${user.id})}" method="post" class="custom-form"
-                  th:object="${user}">
+            <form th:with="actionUrl=${merchant != null and merchant.isMerchantMode() ? '/user/users/edit/merchant/' + user.id : '/user/users/edit/' + user.id}"
+                  th:action="@{${actionUrl}}"
+                  method="post" class="custom-form" th:object="${user}">
                 <input type="hidden" name="merchantId" th:value="${merchant != null ? merchant.id : ''}">
                 <div th:if="${merchant != null}">
                     <div class="form-group">
@@ -68,11 +69,11 @@
                     <label for="email">Email:</label>
                     <input type="email" id="email" th:field="*{email}" required>
                 </div>
-                <div class="form-group checkbox-group">
+                <div th:if="${isAdmin}" class="form-group checkbox-group">
                     <label for="isAdmin">Is Admin:</label>
                     <input type="checkbox" id="isAdmin" th:field="*{admin}">
                 </div>
-                <div class="form-group checkbox-group">
+                <div th:if="${isAdmin}" class="form-group checkbox-group">
                     <label for="active">Is Active:</label>
                     <input type="checkbox" id="active" th:field="*{active}">
                 </div>

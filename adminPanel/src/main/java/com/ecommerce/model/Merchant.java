@@ -52,4 +52,7 @@ public class Merchant extends User {
 
     @Column(name = "isStoreActive")
     private boolean storeActive;
+
+    @Column(name = "isMerchantMode")
+    private boolean isMerchantMode;
 }
