@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,9 @@ public class UserController {
 
     @Autowired
     private MerchantService merchantService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);  // Logger for this class.
 
@@ -180,32 +184,46 @@ public class UserController {
 
     @PostMapping("/users/edit/{id}")
     public String editUser(@PathVariable Long id, @ModelAttribute User user) {
-        String role = user.isAdmin() ? "admin" : "merchant";
+        Optional<User> existingUserOptional = userService.getUserById(id);
 
-        if (user.isAdmin()) {
-            userService.updateUser(id, user);
-            return "redirect:/user/users?role=" + role;
-        } else {
-            Optional<Merchant> optionalMerchant = merchantService.findMerchantById(id);
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
 
-            if (optionalMerchant.isPresent()) {
-                Merchant existingMerchant = optionalMerchant.get();
-                existingMerchant.setMerchantMode(true);
-                merchantService.save(existingMerchant);
+            if (user.getPassword() == null || user.getPassword().isEmpty()) {
+                user.setPassword(existingUser.getPassword());
             } else {
-                Merchant newMerchant = new Merchant();
-                newMerchant.setId(user.getId());
-                newMerchant.setUsername(user.getUsername());
-                newMerchant.setEmail(user.getEmail());
-                newMerchant.setMerchantMode(true);
-                newMerchant.setActive(user.isActive());
-                merchantService.save(newMerchant);
+                String encodedPassword = passwordEncoder.encode(user.getPassword());
+                user.setPassword(encodedPassword);
             }
 
-            merchantService.deleteMerchant(id);
+            String role = user.isAdmin() ? "admin" : "merchant";
 
-            return "redirect:/user/users/edit/" + user.getId() + "?changeToMerchant=true";
+            if (user.isAdmin()) {
+                userService.updateUser(id, user);
+                return "redirect:/user/users?role=" + role;
+            } else {
+                Optional<Merchant> optionalMerchant = merchantService.findMerchantById(id);
+
+                if (optionalMerchant.isPresent()) {
+                    Merchant existingMerchant = optionalMerchant.get();
+                    existingMerchant.setMerchantMode(true);
+                    merchantService.save(existingMerchant);
+                } else {
+                    Merchant newMerchant = new Merchant();
+                    newMerchant.setId(user.getId());
+                    newMerchant.setUsername(user.getUsername());
+                    newMerchant.setEmail(user.getEmail());
+                    newMerchant.setMerchantMode(true);
+                    newMerchant.setActive(user.isActive());
+                    newMerchant.setPassword(user.getPassword());
+                    merchantService.save(newMerchant);
+                }
+
+                return "redirect:/user/users/edit/" + user.getId() + "?changeToMerchant=true";
+            }
         }
+
+        return "redirect:/error";
     }
 
     @PostMapping("/users/edit/merchant/{id}")  // Handles POST requests to update user details.
