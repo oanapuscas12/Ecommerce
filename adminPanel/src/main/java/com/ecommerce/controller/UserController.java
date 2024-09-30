@@ -178,15 +178,32 @@ public class UserController {
         return "redirect:/user/users?role=" + (role != null ? role : "admin");  // Redirects to the user list if user is not found.
     }
 
-    @PostMapping("/users/edit/{id}")  // Handles POST requests to update user details.
+    @PostMapping("/users/edit/{id}")
     public String editUser(@PathVariable Long id, @ModelAttribute User user) {
         String role = user.isAdmin() ? "admin" : "merchant";
+
         if (user.isAdmin()) {
-            userService.updateUser(id, user);  // Calls service to update the user.
-            return "redirect:/user/users?role=" + role;  // Redirects to the user list page.
+            userService.updateUser(id, user);
+            return "redirect:/user/users?role=" + role;
         } else {
-            // TODO find merchant and set it to merchantmode true if found + save
-            //merchantService.deleteMerchant(id);
+            Optional<Merchant> optionalMerchant = merchantService.findMerchantById(id);
+
+            if (optionalMerchant.isPresent()) {
+                Merchant existingMerchant = optionalMerchant.get();
+                existingMerchant.setMerchantMode(true);
+                merchantService.save(existingMerchant);
+            } else {
+                Merchant newMerchant = new Merchant();
+                newMerchant.setId(user.getId());
+                newMerchant.setUsername(user.getUsername());
+                newMerchant.setEmail(user.getEmail());
+                newMerchant.setMerchantMode(true);
+                newMerchant.setActive(user.isActive());
+                merchantService.save(newMerchant);
+            }
+
+            merchantService.deleteMerchant(id);
+
             return "redirect:/user/users/edit/" + user.getId() + "?changeToMerchant=true";
         }
     }
@@ -196,7 +213,7 @@ public class UserController {
         String role = user.isAdmin() ? "admin" : "merchant";
         if (merchant != null) {
             merchant.setMerchantMode(!user.isAdmin());
-//            merchantService.updateMerchant(id, merchant);
+            merchantService.updateMerchant(id, merchant);
         }
         if (user.isAdmin()) {
             userService.updateUser(id, user);
