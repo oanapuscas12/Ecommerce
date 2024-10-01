@@ -1,2 +1,9 @@
+com/ecommerce/model/Feedback.class
+com/ecommerce/service/NotificationService.class
+com/ecommerce/service/FeedbackService.class
+com/ecommerce/model/Notification.class
+com/ecommerce/repository/FeedbackRepository.class
 com/ecommerce/repository/MerchantRepository.class
+com/ecommerce/controller/FeedbackController.class
+com/ecommerce/repository/NotificationRepository.class
 com/ecommerce/model/Merchant.class
