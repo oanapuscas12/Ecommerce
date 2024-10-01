@@ -196,6 +196,9 @@ public class UserController {
                 user.setPassword(encodedPassword);
             }
 
+            existingUser.setAdmin(user.isAdmin());
+            userService.updateUser(id, existingUser);
+
             String role = user.isAdmin() ? "admin" : "merchant";
 
             if (user.isAdmin()) {

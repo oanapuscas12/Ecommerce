@@ -71,7 +71,8 @@
                 </div>
                 <div th:if="${isAdmin}" class="form-group checkbox-group">
                     <label for="isAdmin">Is Admin:</label>
-                    <input type="checkbox" id="isAdmin" th:field="*{admin}">
+                    <input type="hidden" name="admin" value="false">
+                    <input type="checkbox" id="isAdmin" th:field="*{admin}" value="true">
                 </div>
                 <div th:if="${isAdmin}" class="form-group checkbox-group">
                     <label for="active">Is Active:</label>
