@@ -2,12 +2,14 @@ package com.ecommerce.controller;
 
 import com.ecommerce.model.Merchant;
 import com.ecommerce.model.User;
+import com.ecommerce.service.MerchantService;
 import com.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;  // Injects UserService for performing user-related operations.
+
+    @Autowired
+    private MerchantService merchantService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);  // Logger for this class.
 
@@ -146,7 +154,7 @@ public class UserController {
     }
 
     @GetMapping("/users/edit/{id}")  // Handles GET requests to show the user edit form.
-    public String editUserForm(@PathVariable Long id, @RequestParam(required = false) String role, Model model) {
+    public String editUserForm(@PathVariable Long id, @RequestParam(required = false) String role, Model model, @PathVariable(required = false) String changeToMerchant) {
         Optional<User> user = userService.getUserById(id);  // Fetches the user by ID.
         Optional<Merchant> merchant = userService.getMerchantById(id);  // Fetches the merchant by ID if applicable.
 
@@ -158,18 +166,82 @@ public class UserController {
             model.addAttribute("role", role != null ? role : "admin");
             model.addAttribute("otherRole", user.get().isAdmin() ? "Admin" : "Merchant");
             model.addAttribute("pageTitle", "Edit User: " + user.get().getUsername());
-            merchant.ifPresent(value -> model.addAttribute("merchant", value));
-
-            return "user/edit-user";  // Returns the view for editing user details.
+            if (changeToMerchant == null) {
+                merchant.ifPresent(value -> model.addAttribute("merchant", value));
+            } else {
+                if (merchant.isPresent()) {
+                    model.addAttribute("merchant", merchant.get());
+                } else {
+                    Merchant merch = (Merchant) user.get();
+                    merch.setMerchantMode(true);
+                    model.addAttribute("merchant", merch);
+                }
+            }
+            return "user/edit-user";
         }
         return "redirect:/user/users?role=" + (role != null ? role : "admin");  // Redirects to the user list if user is not found.
     }
 
-    @PostMapping("/users/edit/{id}")  // Handles POST requests to update user details.
+    @PostMapping("/users/edit/{id}")
     public String editUser(@PathVariable Long id, @ModelAttribute User user) {
-        userService.updateUser(id, user);  // Calls service to update the user.
+        Optional<User> existingUserOptional = userService.getUserById(id);
+
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+
+            if (user.getPassword() == null || user.getPassword().isEmpty()) {
+                user.setPassword(existingUser.getPassword());
+            } else {
+                String encodedPassword = passwordEncoder.encode(user.getPassword());
+                user.setPassword(encodedPassword);
+            }
+
+            existingUser.setAdmin(user.isAdmin());
+            userService.updateUser(id, existingUser);
+
+            String role = user.isAdmin() ? "admin" : "merchant";
+
+            if (user.isAdmin()) {
+                userService.updateUser(id, user);
+                return "redirect:/user/users?role=" + role;
+            } else {
+                Optional<Merchant> optionalMerchant = merchantService.findMerchantById(id);
+
+                if (optionalMerchant.isPresent()) {
+                    Merchant existingMerchant = optionalMerchant.get();
+                    existingMerchant.setMerchantMode(true);
+                    merchantService.save(existingMerchant);
+                } else {
+                    Merchant newMerchant = new Merchant();
+                    newMerchant.setId(user.getId());
+                    newMerchant.setUsername(user.getUsername());
+                    newMerchant.setEmail(user.getEmail());
+                    newMerchant.setMerchantMode(true);
+                    newMerchant.setActive(user.isActive());
+                    newMerchant.setPassword(user.getPassword());
+                    merchantService.save(newMerchant);
+                }
+
+                return "redirect:/user/users/edit/" + user.getId() + "?changeToMerchant=true";
+            }
+        }
+
+        return "redirect:/error";
+    }
+
+    @PostMapping("/users/edit/merchant/{id}")  // Handles POST requests to update user details.
+    public String editMerchant(@PathVariable Long id, @ModelAttribute User user, @ModelAttribute Merchant merchant) {
         String role = user.isAdmin() ? "admin" : "merchant";
-        return "redirect:/user/users?role=" + role;  // Redirects to the user list page.
+        if (merchant != null) {
+            merchant.setMerchantMode(!user.isAdmin());
+            merchantService.updateMerchant(id, merchant);
+        }
+        if (user.isAdmin()) {
+            userService.updateUser(id, user);
+        } else {
+            userService.updateMerchant(id, user, merchant);
+        }
+        return "redirect:/user/users?role=" + role;
     }
 
     @PostMapping("/users/deactivate/{id}")  // Handles POST requests to deactivate a user.

@@ -66,11 +66,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Defines a password encoder bean using BCrypt to hash passwords.
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        // Exposes the AuthenticationManager as a bean, which is required to perform authentication manually in some cases.
-        return super.authenticationManagerBean();
-    }
 }

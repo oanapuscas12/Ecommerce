@@ -1,4 +1,6 @@
-in the project run the command:npm install --save express
+in the project run the command:
+npm install --save express
+npm install bcrypt
 --------------
 Connect to postgres,
 Complete in app.js the DB information:
